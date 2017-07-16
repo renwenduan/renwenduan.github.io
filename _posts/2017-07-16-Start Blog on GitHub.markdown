@@ -6,7 +6,7 @@ date:       2017-7-16
 author:     "Duanrw"
 header-img: "img/post-bg-js-module.jpg"
 tags:
-    -emotions
+    - emotions
 ---
 > 'life is short. I use python !'
 ## Foreword
