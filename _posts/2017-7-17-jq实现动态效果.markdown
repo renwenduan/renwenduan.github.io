@@ -1,0 +1,38 @@
+---
+layout:     post
+title:      "jq实现的几个动态效果详解"
+subtitle:   "使用jQuery实现的菜单折叠(list.slide-up),固定位置模块(Fix module),回归顶部按钮(Back to top),风琴效果(Accordion effect),幻灯效果(Slideshow effect)"
+date:       2017-7-17
+author:     "Duanrw"
+header-img: "img/post-bg-js-module.jpg"
+tags:
+    - 前端开发
+    - JavaScript
+    - jQuery
+---
+> These affects are very common in the webpage,but how do them worked?
+> This passage will show an Example.
+
+
+## Catagory
+
+1. [List.slide-up](#List slide-up)
+  1. theory and process analysis
+  2. Example for the process
+  3. used conditions
+2. [Fix module](#Fix module)
+  1. theory and process analysis
+  2. Example for the process
+  3. used conditions
+3. [Back to top](#Back to top)
+  1. theory and process analysis
+  2. Example for the process
+  3. used conditions
+4. [Accordion effect](#Accordion effect)
+  1. theory and process analysis
+  2. Example for the process
+  3. used conditions
+5. [Slideshow effect](#Slideshow effect)
+  1. theory and process analysis
+  2. Example for the process
+  3. used conditions
