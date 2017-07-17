@@ -12,9 +12,9 @@ baseurl: ""                             # for example, '/blog' if your blog host
 
 # SNS settings
 RSS: false
-weibo_username:     duanrw
-zhihu_username:     duanrw
-github_username:    renwenduan
+weibo_username: duanrw
+zhihu_username: duanrw
+github_username: renwenduan
 # twitter_username:   duanrw
 #facebook_username:  huxpro
 # linkedin_username:  firstname-lastname-idxxxx
@@ -25,7 +25,7 @@ github_username:    renwenduan
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 highlighter: rouge
 permalink: pretty
-paginate: 6
+paginate: 8
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
 
