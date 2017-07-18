@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "jq实现的几个动态效果详解"
-subtitle:   "使用jQuery实现的菜单折叠(list.slide-up),固定位置模块(Fix module),回归顶部按钮(Back to top),风琴效果(Accordion effect),幻灯效果(Slideshow effect)"
+subtitle:   "使用jQuery实现的菜单折叠(list.slide-up),固定位置模块(Fix module),回归顶部按钮(Back to top),手风琴效果(Accordion effect),幻灯效果(Slideshow effect)"
 date:       2017-7-17
 author:     "Duanrw"
 header-img: "img/post-bg-js-module.jpg"
@@ -19,11 +19,13 @@ tags:
 
 ## Category
 
-### [列表折叠](## 列表折叠)
+### 列表折叠
 #### 原理过程分析
 List slide-up is a vary basic effect on webpage. such as you you can open a list without a open a new page and the list will close very smoothly  when your mouse is leave the list category or click the category again.
 首先,我们来先搞清楚他的原理,在网页中的菜单折叠其实是jq中的**slide-up** 效果并且我们每次只允许打开一个列表父元素,就像这样!
+
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnsapgbw0g207k0adwi9.gif)
+
 你需要了解**节点** 的概念,以及节点操作中的**siblings()** 和**.children()** 其他的操作可以看这里[Javascript&jQuery-4.4.3](http://pan.baidu.com/s/1nuEp2bv),这里我们只了解这几个小功能的的用法.
 slideup 对应的是 slidedown 可以是列表展开或者折叠,就上上图演示的一样,另外是siblings() 是指选中元素的兄弟元素也就是当前元素同级的反选,children是指当前元素的子元素也就是选中包裹的东西,说这些是不是太基础了😆.
 它的原理是什么呢?其实就是点击的时候选中的元素执行slidedown操作,它的siblings执行slideup操作, 另外插一句如果想只用一个方法来实现折叠展开效果可使用**slideToggle()** ,这个updown的结合,也即是改变当前的状态,如果你是折叠就展开反之则折叠.
@@ -137,22 +139,103 @@ $(function(){
   })
   /*这个效果没有过度的效果但是一样实现了折叠和展开,addClass是给元素增加类,而removeClass是给选中的元素移除类*/
 ```
-### [固定模块](# Fix module)
+### 固定模块
 #### 原理过程分析
 #### 代码示例
 
-### [返回顶部](# Back to top)
+### 返回顶部
 #### 原理过程分析
 #### 代码示例
 
-### [手风琴效果](#)
+### 手风琴效果
 #### 原理过程分析
-手风琴效果图如下 
+手风琴效果图如下
+
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnwoti4rog20fs085du6.gif)
+
 那么我们来分析下这个过程是如何实现的:
+我们定义如下结构
+```
+div>ul>li*5>a+img
+```
+首先你要定义好一个刚能装下五个(这里是我举例子使用的五个标签具体多少看自己)标签以及图片的div,并且使用绝对定位来定位这几个li,这里有个坑,就是如果使用了绝对定位定位Li那么他的爷爷元素div一定要设置绝对定位,具体的可以谷歌搜索为何,也就是说尺寸设计上只能正好装下这些东西,那么多出的部分怎么办,当然是隐藏喽,设置div的overflow:hidden. css部分设计完了那么jq部分怎么实现的呢,我们可以这样理解:
+当我们点击其中的一个li的时候,这个li以及li左边的部分全部按照绝对定位站到自己应该站的位置,而li右边的所有元素全部往右定位到自己在右边应该在的位置,其实每个li只有两个位置而已,所以我们通过这个来实现的时候就比较方便了,当然我们在这里还要使用循环啦,这样能更智能的更方便的写出代码. 废话不多说上代码!
+
 #### 代码示例
 
-### [幻灯效果(最新)](#Slideshow effect)
+同样的我们先定义HTML部分如下
+```
+<body>
+<div id="accordion">
+	<ul>
+	<li class="bar01"><span>非洲景色01</span><img src="images/001.jpg" /></li>
+    <li class="bar02"><span>非洲景色02</span><img src="images/002.jpg" /></li>
+    <li class="bar03"><span>非洲景色03</span><img src="images/003.jpg" /></li>
+    <li class="bar04"><span>非洲景色04</span><img src="images/004.jpg" /></li>
+    <li class="bar05"><span>非洲景色05</span><img src="images/005.jpg" /></li>
+	</ul>
+</div>
+</body>
+
+
+```
+然后是css部分
+```
+
+<style>
+*{margin:0;padding:0;}
+body{font-size:12px;}
+/*这里的according的位置必须设置为relative或者absolute否则子元素无法正常显示*/
+#accordion{width:727px; height:350px; margin:100px auto 0 auto; position:relative; overflow:hidden; border:1px solid #CCC;}
+#accordion ul{list-style:none;}
+/*这里我们使用了绝对定位*/
+#accordion ul li{width:643px;height:350px; position:absolute; background:#FFF;}
+#accordion ul li span{display:block;width:20px; height:350px; float:left; text-align:center; color:#FFF; padding-top:5px; cursor:pointer;}
+/*这里图片的大小为 622*350 */
+#accordion ul li img{display:block; float:right;}
+
+.bar01{left:0px;}
+.bar02{left:643px;}
+.bar03{left:664px;}
+.bar04{left:685px;}
+.bar05{left:706px;}
+.bar01 span{background:#09E0B5;}
+.bar02 span{background:#3D7FBB;}
+.bar03 span{background:#5CA716;}
+.bar04 span{background:#F28B24;}
+.bar05 span{background:#7C0070;}
+</style>
+```
+最主要的js部分来了:
+```
+<script>
+$(function(){
+	var $li = $('#accordion li');
+	// 首先我们让点击的li以及li左边的部分全部靠左归位
+	$li.click(fucntion(){  // 这里是选中点击的li的位置归左
+
+		$(this).animate({'left':$(this).index()*21}) //由于每个li的a标签大小为21所以我们让可以选中标签的索引乘以21就可以得到这个li应该在的位置.
+		// 下面我们开始移动这个标签左边的所有标签,这里我们用到了preAll 这个功能,这是指在同级元素中选中元素的前面的所有元素
+
+		$(this).preAll().each(function(){ // 这里我们使用了循环
+			// 下面的this是指循环的每个pre的元素
+
+			$(this).animate({'left':$(this).index()*21})
+
+		})
+				// 下面我们让点击元素的所有的右边的元素归到右边去
+		$(this).nextAll().each(fucntion(){
+
+			$(this).animate({'left':727-21*(5-$(this).index())})
+		})
+	})
+})
+</script>
+```
+当然这只是其中的一种思路:我想到的另外一种思路和上面类似:因为每个标签所对应的位置只有两个,可以使用addClass 和removeClass来移动每个li,这里就不试验了,你可以做下试试!
+
+
+### 幻灯效果(最新)
 #### 原理过程分析
 #### 代码示例
 
