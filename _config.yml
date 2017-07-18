@@ -90,7 +90,6 @@ friends: [
         title: "Hux Blog",
         href: "http://huangxuan.me"
     },{
-    {
         title: "乱序",
         href: "http://mida.re/"
     },{
@@ -120,5 +119,9 @@ friends: [
     },{
         title: "前端神盾局",
         href: "http://wepiaofei.github.io/blog/"
+    },{
+        title: "duanrw blog",
+        href: "http://www.duanrw.cn"
+    
     }
 ]
