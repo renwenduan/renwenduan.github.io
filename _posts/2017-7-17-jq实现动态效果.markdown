@@ -19,7 +19,7 @@ tags:
 
 ## Category
 
-### 列表折叠
+### 列表折叠效果
 #### 原理过程分析
 List slide-up is a vary basic effect on webpage. such as you you can open a list without a open a new page and the list will close very smoothly  when your mouse is leave the list category or click the category again.
 首先,我们来先搞清楚他的原理,在网页中的菜单折叠其实是jq中的**slide-up** 效果并且我们每次只允许打开一个列表父元素,就像这样!
@@ -139,15 +139,15 @@ $(function(){
   })
   /*这个效果没有过度的效果但是一样实现了折叠和展开,addClass是给元素增加类,而removeClass是给选中的元素移除类*/
 ```
-### 固定模块
+### 固定模块效果
 #### 原理过程分析
 #### 代码示例
 
-### 返回顶部
+### 返回顶部效果
 #### 原理过程分析
 #### 代码示例
 
-### 手风琴效果
+### 手风琴效果效果
 #### 原理过程分析
 手风琴效果图如下
 
