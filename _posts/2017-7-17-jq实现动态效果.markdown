@@ -22,7 +22,7 @@ tags:
 #### Theory and process analysis
 首先,我们来先搞清楚他的原理,在网页中的菜单折叠其实是jq中的**slide-up** 效果并且我们每次只允许打开一个列表父元素,就像这样!
 [](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnsapgbw0g207k0adwi9.gif)
-你需要了解**节点**的概念,以及节点操作中的**siblings()** 和 ** .children()** 其他的操作可以看这里[Javascript&jQuery-4.4.3](#),这里我们只了解这四个小东西的用法.
+你需要了解**节点**的概念,以及节点操作中的**siblings()** 和 ** .children()** 其他的操作可以看这里[Javascript&jQuery-4.4.3](http://pan.baidu.com/s/1nuEp2bv),这里我们只了解这几个小功能的的用法.
 slideup 对应的是 slidedown 可以是列表展开或者折叠,就上上图演示的一样,另外是siblings() 是指选中元素的兄弟元素也就是当前元素同级的反选,children是指当前元素的子元素也就是选中包裹的东西,说这些是不是太基础了😆.
 它的原理是什么呢?其实就是点击的时候选中的元素执行slidedown操作,它的siblings执行slideup操作, 另外插一句如果想只用一个方法来实现折叠展开效果可使用**slideToggle()** ,这个updown的结合,也即是改变当前的状态,如果你是折叠就展开反之则折叠.
 还可以直接使用**addClass()** 方法来操作,简单吧!
