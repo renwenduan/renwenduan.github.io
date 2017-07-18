@@ -137,17 +137,17 @@ $(function(){
   })
   /*这个效果没有过度的效果但是一样实现了折叠和展开,addClass是给元素增加类,而removeClass是给选中的元素移除类*/
 ```
-### [固定模块](#Fix module)
+### [固定模块](# Fix module)
 #### 原理过程分析
 #### 代码示例
 
-### [返回顶部](#Back to top)
+### [返回顶部](# Back to top)
 #### 原理过程分析
 #### 代码示例
 
-### [手风琴效果](#Accordion effect)
-	手风琴效果图如下
-	![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnwoti4rog20fs085du6.gif)
+### [手风琴效果](#)
+	手风琴效果图如下 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnwoti4rog20fs085du6.gif)
+
 #### 原理过程分析
 #### 代码示例
 
