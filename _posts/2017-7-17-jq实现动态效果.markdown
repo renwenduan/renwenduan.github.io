@@ -5,6 +5,7 @@ subtitle:   "使用jQuery实现的菜单折叠(list.slide-up),固定位置模块
 date:       2017-7-17
 author:     "Duanrw"
 header-img: "img/post-bg-js-module.jpg"
+catalog: true
 tags:
     - 前端开发
     - JavaScript
