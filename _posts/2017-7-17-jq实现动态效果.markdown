@@ -1,0 +1,158 @@
+---
+layout:     post
+title:      "jq实现的几个动态效果详解"
+subtitle:   "使用jQuery实现的菜单折叠(list.slide-up),固定位置模块(Fix module),回归顶部按钮(Back to top),风琴效果(Accordion effect),幻灯效果(Slideshow effect)"
+date:       2017-7-17
+author:     "Duanrw"
+header-img: "img/post-bg-js-module.jpg"
+catalog: true
+header-mask: 0.3
+tags:
+    - 前端开发
+    - JavaScript
+    - jQuery
+---
+> These affects are very common in the webpage,but how do them worked?
+> This passage will show an Example.
+
+
+## Category
+
+### [List slide-up](## List slide-up)
+#### Theory and process analysis
+首先,我们来先搞清楚他的原理,在网页中的菜单折叠其实是jq中的**slide-up** 效果并且我们每次只允许打开一个列表父元素,就像这样!
+[](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnsapgbw0g207k0adwi9.gif)
+你需要了解**节点**的概念,以及节点操作中的**siblings()** 和 ** .children()** 其他的操作可以看这里[Javascript&jQuery-4.4.3](#),这里我们只了解这四个小东西的用法.
+slideup 对应的是 slidedown 可以是列表展开或者折叠,就上上图演示的一样,另外是siblings() 是指选中元素的兄弟元素也就是当前元素同级的反选,children是指当前元素的子元素也就是选中包裹的东西,说这些是不是太基础了😆.
+它的原理是什么呢?其实就是点击的时候选中的元素执行slidedown操作,它的siblings执行slideup操作, 另外插一句如果想只用一个方法来实现折叠展开效果可使用**slideToggle()** ,这个updown的结合,也即是改变当前的状态,如果你是折叠就展开反之则折叠.
+还可以直接使用**addClass()** 方法来操作,简单吧!
+下面就直接上代码吧!
+#### Example for the process
+```
+/*HTML部分*/
+<body>
+  	<ul class="menu">
+  		<li>
+  			<a href="#" class="level1">水果</a>
+  			<ul class="current">
+  				<li><a href="#">苹果</a></li>
+  				<li><a href="#">梨子</a></li>
+  				<li><a href="#">葡萄</a></li>
+  				<li><a href="#">火龙果</a></li>
+  			</ul>
+  		</li>
+  		<li>
+  			<a href="#" class="level1">海鲜</a>
+  			<ul class="current">
+  				<li><a href="#">蛏子</a></li>
+  				<li><a href="#">扇贝</a></li>
+  				<li><a href="#">龙虾</a></li>
+  				<li><a href="#">象拔蚌</a></li>
+  			</ul>
+  		</li>
+  	</ul>
+</body>
+/css部分*/
+<style type="text/css">
+		body{
+			font-family:'Microsoft Yahei';
+		}
+		body,ul{
+			margin:0px;
+			padding:0px;
+		}
+
+		ul{list-style:none;}
+
+
+		.menu{
+			width:200px;
+			margin:20px auto 0;
+		}
+
+		.menu .level1,.menu li ul a{
+			display:block;
+			width:200px;
+			height:30px;
+			line-height:30px;
+			text-decoration:none;
+			background-color:#3366cc;
+			color:#fff;
+			font-size:16px;
+			text-indent:10px;			
+		}
+
+		.menu .level1{
+			border-bottom:1px solid #afc6f6;
+
+		}
+
+		.menu li ul a{
+			font-size:14px;
+			text-indent:20px;
+			background-color:#7aa1ef;
+
+		}
+
+		.menu li ul li{
+			border-bottom:1px solid #afc6f6;
+		}
+
+
+
+		.menu li ul{
+			display:none;
+		}
+
+		.menu li ul.current{
+			display:block;
+		}
+
+		.menu li ul li a:hover{
+			background-color:#f6b544;
+		}
+
+```
+下面我们来使用jq来进行折叠菜单的操作:
+导入文件我就不写了,首先创建ready
+```
+<script src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+    $(function(){     // 创建ready
+       $('.level1').click(function(){  //选中要操作的对象,定义执行点击操作后的函数
+          $(this).next().stop().slideToggle().parent().siblings().children('ul').slideUp();
+          /*选中上面点击的元素块.消除多次点击效果只保留最后一次.执行当前折叠/展开的相反的操作.它的父级元素.的兄弟元素.的子元素(选中ul).执行slideup操作*/
+       })
+    })
+</script>
+```
+这是第一种方法我们开始演示第二种addClass()方法:
+```
+$(function(){
+  $('.level1').click(function(){
+    $(this).next().stop().addClass('current').parent().siblings().children('ul').removeClass('current')
+    })
+  })
+  /*效果是一样的addClass是给元素增加类,而removeClass是给选中的元素移除类*/
+```
+### [Fix module](#Fix module)
+#### theory and process analysis
+#### Example for the process
+#### used conditions
+### [Back to top](#Back to top)
+#### theory and process analysis
+#### Example for the process
+#### used conditions
+### [Accordion effect](#Accordion effect)
+#### theory and process analysis
+#### Example for the process
+#### used conditions
+### [Slideshow effect](#Slideshow effect)
+#### theory and process analysis
+#### Example for the process
+#### used conditions
+
+---
+## List slide-up
+
+> List slide-up is a vary basic effect on webpage. such as you you can open a list without a open a new page and the list will close very smoothly  when your mouse is leave the list category or click the category again.such as the next effect.
