@@ -146,9 +146,10 @@ $(function(){
 #### 代码示例
 
 ### [手风琴效果](#)
-	手风琴效果图如下 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnwoti4rog20fs085du6.gif)
-
 #### 原理过程分析
+手风琴效果图如下 
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnwoti4rog20fs085du6.gif)
+那么我们来分析下这个过程是如何实现的:
 #### 代码示例
 
 ### [幻灯效果(最新)](#Slideshow effect)
