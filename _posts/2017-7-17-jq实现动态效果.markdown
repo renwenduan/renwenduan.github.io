@@ -13,13 +13,15 @@ tags:
     - jQuery
 ---
 > These affects are very common in the webpage,but how do them worked?
-> This passage will show an Example.
+> This passage will show an Example and analysis
 
+---
 
 ## Category
 
-### [List slide-up](## List slide-up)
-#### Theory and process analysis
+### ![列表折叠](## 列表折叠)
+#### 原理过程分析
+List slide-up is a vary basic effect on webpage. such as you you can open a list without a open a new page and the list will close very smoothly  when your mouse is leave the list category or click the category again.
 首先,我们来先搞清楚他的原理,在网页中的菜单折叠其实是jq中的**slide-up** 效果并且我们每次只允许打开一个列表父元素,就像这样!
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnsapgbw0g207k0adwi9.gif)
 你需要了解**节点**的概念,以及节点操作中的**siblings()** 和 ** .children()** 其他的操作可以看这里[Javascript&jQuery-4.4.3](http://pan.baidu.com/s/1nuEp2bv),这里我们只了解这几个小功能的的用法.
@@ -27,7 +29,7 @@ slideup 对应的是 slidedown 可以是列表展开或者折叠,就上上图演
 它的原理是什么呢?其实就是点击的时候选中的元素执行slidedown操作,它的siblings执行slideup操作, 另外插一句如果想只用一个方法来实现折叠展开效果可使用**slideToggle()** ,这个updown的结合,也即是改变当前的状态,如果你是折叠就展开反之则折叠.
 还可以直接使用**addClass()** 方法来操作,简单吧!
 下面就直接上代码吧!
-#### Example for the process
+#### 代码示例
 ```
 /*HTML部分*/
 <body>
@@ -133,26 +135,23 @@ $(function(){
     $(this).next().stop().addClass('current').parent().siblings().children('ul').removeClass('current')
     })
   })
-  /*效果是一样的addClass是给元素增加类,而removeClass是给选中的元素移除类*/
+  /*这个效果没有过度的效果但是一样实现了折叠和展开,addClass是给元素增加类,而removeClass是给选中的元素移除类*/
 ```
-### [Fix module](#Fix module)
-#### theory and process analysis
-#### Example for the process
-#### used conditions
-### [Back to top](#Back to top)
-#### theory and process analysis
-#### Example for the process
-#### used conditions
-### [Accordion effect](#Accordion effect)
-#### theory and process analysis
-#### Example for the process
-#### used conditions
-### [Slideshow effect](#Slideshow effect)
-#### theory and process analysis
-#### Example for the process
-#### used conditions
+### [固定模块](#Fix module)
+#### 原理过程分析
+#### 代码示例
+
+### [返回顶部](#Back to top)
+#### 原理过程分析
+#### 代码示例
+
+### [手风琴效果](#Accordion effect)
+#### 原理过程分析
+#### 代码示例
+
+### [幻灯效果(最新)](#Slideshow effect)
+#### 原理过程分析
+#### 代码示例
+
 
 ---
-## List slide-up
-
-> List slide-up is a vary basic effect on webpage. such as you you can open a list without a open a new page and the list will close very smoothly  when your mouse is leave the list category or click the category again.such as the next effect.
