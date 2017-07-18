@@ -146,6 +146,8 @@ $(function(){
 #### 代码示例
 
 ### [手风琴效果](#Accordion effect)
+	手风琴效果图如下
+	![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhnwoti4rog20fs085du6.gif)
 #### 原理过程分析
 #### 代码示例
 
