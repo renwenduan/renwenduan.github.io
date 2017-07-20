@@ -196,7 +196,7 @@ def index(request): # 如果在url中匹配到的结果是view.index 那么就�
 
 
 def details(request, id):
-    book = BookInfo.objects.get(pk=id)  # 这里我们可以导入数据库中的模块来获取信息返回函数进行render
+    book = BookInfo.objects.get(pk=id) # 这里我们可以导入数据库中的模块来获取信息返回函数进行render
     herolist = book.heroinfo_set.all()  # 这里是查询操作
     context = {'h': herolist}  # 这里要定义一个字典将信息传递进去
     return render(request, 'details.html', context)  
