@@ -129,7 +129,7 @@ from django.contrib import admin
 from models import BookInfo,HeroInfo
 
 class BookInfoAdmin(admin.Admin):
-    list_display = [这里填写要显示的字段名称]
+    list_display = [] # [这里填写要显示的字段名称]
 admin.site.register(BookInfo,BookInfoAdmin)
 # 这样就完成了注册信息,打开图形界面发现自己想要的信息都被显示了.
 ```  
@@ -167,9 +167,12 @@ def index(request):
 2.配置URLconf  
 url 的配置分为两部分,第一步是用户request传递的信息到服务器的时候显示 项目的url 进行解析匹配如果匹配成功则传入到URL的函数中的第二个参数里去寻找去除这部分的剩下的信息.对于这个项目也即是先去test1 下的test1 下的urls.py 去匹配网址  
 
-> url(r'^',include('booktest.urls')) # 如果匹配成功那么就会将网址去掉最匹配的部分继续在booktest.urls中去匹配  
-> 现在网站的信息就被传递到了app中的urls去匹配了,如果匹配成功那么信息会继续往下传递找用户所请求的信息
+'''python
+url(r'^',include('booktest.urls'))  
+# 如果匹配成功那么就会将网址去掉最匹配的部分继续在booktest.urls中去匹配现在网站的信息就被传递  
+# 到了app中的urls去匹配了,如果匹配成功那么信息会继续往下传递找用户所请求的信息
 
+'''
 
 3.配置views.py  
 用户最终找的信息可以在app中的urls.py中匹配到并且在urls.py中的URL格式为:
@@ -196,7 +199,8 @@ def details(request, id):
     book = BookInfo.objects.get(pk=id)  # 这里我们可以导入数据库中的模块来获取信息返回函数进行render
     herolist = book.heroinfo_set.all()  # 这里是查询操作
     context = {'h': herolist}  # 这里要定义一个字典将信息传递进去
-    return render(request, 'details.html', context)  # 这里第二个参数就是指templates中的文件名称,第三个参数是要传递到第二个参数中
+    return render(request, 'details.html', context)  
+    # 这里第二个参数就是指templates中的文件名称,第三个参数是要传递到第二个参数中  
     # 这样传进后就可以在templates中定义模板类型,这里的第二个参数要注意,使用的路径是去掉前面URL匹配后的路径
 ```
 
@@ -215,7 +219,8 @@ def details(request, id):
 ---
 
 ```python
-/*创建好了的model中每个class相当于一个数据库的表,而类属性相当于数据库中的字段,如果两个表相关联使用了外键,那么被关联的类返回什么引用的外键就是什么*/
+# 创建好了的model中每个class相当于一个数据库的表,而类属性相当于数据库中的字段,如果两个表相关联使用了外键,  
+# 那么被关联的类返回什么引用的外键就是什么*/
 class BookInfo(models.Model):
     btitle = models.CharField(max_length=20)
     bpub_date = models.DateField()
@@ -228,7 +233,8 @@ class HeroInfo(models.Model):
     hname = models.CharField(max_length=20)
     hgender = models.BooleanField()
     hcontent = models.CharField(max_length=100)
-    hBook = models.ForeignKey('BookInfo') # 这里使用了外键那么这个外键值就是BookInfo的str的返回值也就是b.title
+    hBook = models.ForeignKey('BookInfo')  
+    # 这里使用了外键那么这个外键值就是BookInfo的str的返回值也就是b.title
 
     def __str__(self):
         return self.hname.encode('utf-8')
@@ -237,13 +243,14 @@ class HeroInfo(models.Model):
 
 ```python
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
-settings中的这个定义是找到项目所在的绝对路径,我们输出如下:
+# settings中的这个定义是找到项目所在的绝对路径,我们输出如下:
 # 这里每加一层就减少一次最基础的文件路径从内到外依次减少(settings.py-test1-test1)  
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
 print BASE_DIR
-输出的结果为:  
+# 输出的结果为:  
 /Users/cincheny/allproject/test1
-也就是说 os.path.dirname这个函数是用来找到当前文件的绝对路径的,而最后的__file__指的是当前文件,os.path.abspath是当前文件的绝对路径
+# 也就是说 os.path.dirname这个函数是用来找到当前文件的绝对路径的,而最后的__file__指的是当前文件,  
+# os.path.abspath是当前文件的绝对路径
 ```  
 ---
 
