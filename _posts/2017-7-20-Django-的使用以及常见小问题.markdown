@@ -1,0 +1,252 @@
+---
+layout:     post
+title:      "Django的使用以及常用问题的理解"
+subtitle:   "Django框架的创建,从最基础的内容开始一步一步搭建大致的环境!"
+date:       2017-7-20
+author:     "Duanrw"
+header-img: "img/post-bg-js-module.jpg"
+catalog: true
+header-mask: 0.3
+tags:
+    - 框架
+    - python
+    - Django
+    - html
+---
+## Django框架的使用
+> 这里我使用的是mac系统进行的操作,和Ubuntu在创建阶段可能不同,其他的大致相同.所用的环境为python2.6 , Django1.8.2 , IDE: pycharm,如果有错误请联系我来修改谢谢啦!
+
+## 安装环境
+开发多个项目时为了防止各个项目的混乱我们使用了虚拟环境进行开发这样每个环境独立隔离开来. virtualenv 是一个比较好的选择(我只会用这一个,嘿嘿!),当然如果你使用的Python是3.x那么也可以直接使用Python 进行创建:
+
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhq7vygpmhj20fi09b3zv.jpg)  
+
+>  python3 -m venv 环境名字
+>
+>如果使用了Python2 那么这个不会成功因为Python2 没有这个模块
+
+下面我们使用virtualenv在mac上创建虚拟环境:  
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhq7xeg841j20f903n74x.jpg)
+
+安装virtualenv
+>sudo pip install virtualenv   # 如果安装失败可以去将错误代码Google一下就会有解决方法
+
+创建虚拟环境
+先跳转到要保存虚拟化境的文件夹(这里推荐独立建一个文件夹用来存放所有的环境)
+>virtualenv 环境名称   
+>如果想指定Python版本,在中间加上 --python=python2.x  
+
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhq7yvetduj20eh071wf5.jpg)
+
+现在我们创建了虚拟环境然后进入虚拟化境的文件夹在/bin文件夹下 输入 source activate 就会进入虚拟环境然后使用pip install就可以安装所要的包,这里使用Django1.8.2
+>pip install django==1.8.2
+
+## 创建项目
+
+首先进入创建好的虚拟环境然后在想要的文件夹下面创建一个项目:
+>django-admin startproject 项目名称
+
+>django-admin startproject test1
+
+然后可以使用IDE打开这个项目,我们使用pycharm 来打开,然后**配置环境** :  
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhq8104sfpj20dw03ma9z.jpg)  
+
+找到pycharm编译器选项 mac中: preference >project:test1>project Interperter 在右上角的齿轮里选择addlocal 找到自己的虚拟环境下的/bin/中的Python版本快捷方式点击就可以在IDE中加载好虚拟环境
+
+## 创建应用
+这里我的理解是 一个项目可以有很多app 每个app都是一个功能块,他们共享这个项目的资源  
+开始创建app  
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhq81worevj20dw0ahaaa.jpg)  
+>python manage.py startapp 项目名称
+
+>python manage.py startapp booktest
+
+安装成功后,在pycharm中打开需要将应用添加到项目设置中:找到test1文件下的setting.py
+在INSTALLED_APPS 下增加 'booktest'
+
+
+## 开发服务器
+在开发阶段，为了能够快速预览到开发的效果，Django提供了一个纯python编写的轻量级web服务器，仅在开发阶段使用,在命令行中输入:
+>python manage.py runserver ip:端口
+>
+>python manage.py runserver # 端口不谢默认为8000,启动成功后在浏览器中输入ip和端口就可以访问啦
+
+
+## 设计模型
+>使用django进行数据库开发的步骤如下：
+
+>1.在models.py中定义模型类
+
+>2.迁移
+
+>3.通过类和对象完成数据crud
+
+### 1.首先定义模型
+app模型的定义在models.py中,要继承models.Model类
+定义如下
+```
+from django.db import models
+
+class BookInfo(models.Model):
+    btitle = models.CharField(max_length=20)
+    bpub_date = models.DateField()
+    def __str__(self):
+        return self.btitle.encode('utf-8') # 由于这里Python2编码的问题要重新编码
+
+class HeroInfo(models.Model):
+    hname = models.CharField(max_length=20)
+    hgender = models.BooleanField()
+    hcontent = models.CharField(max_length=100)
+    hBook = models.ForeignKey('BookInfo')
+    def __str__(self):
+        return "%d" % self.pk
+
+```
+
+### 2.迁移
+数据库默认采用了sqlite3数据库,迁移分为两步完成:
+
+1.生成迁移文件:
+python manage.py makemigrations  
+2.执行迁移:
+python manage.py migrate
+
+### 3.数据操作
+
+#### 可以在图形界面进行操作:  
+1.首先修改图形界面的显示在setting.py中找到如下并设置:  
+>LANGUAGE_CODE = 'zh-Hans'  
+>TIME_ZONE = 'Asia/Shanghai'  
+
+2.然后在命令行中输入  
+>Python manage.py createsuperuser # 根据提示设置信息  
+
+3.注册模型类  
+在admin.py中设置如下代码:  
+
+```
+from django.contrib import admin
+from models import BookInfo,HeroInfo
+
+class BookInfoAdmin(admin.Admin):
+    list_display = [这里填写要显示的字段名称]
+admin.site.register(BookInfo,BookInfoAdmin)
+# 这样就完成了注册信息,打开图形界面发现自己想要的信息都被显示了.
+```  
+重新打开服务器: python manage.py runserver 然后在浏览器的网址后面加入admin就可以进入图形管理界面了
+
+#### 也可以在shell中进行操作:
+> python manage.py shell # 进入shell 进行操作,下面几个是基本的操作  
+> from ...  import   ...  
+>BookInfo.object.all() # 查询所有的图书信息  
+>b = BookInfo() # 创建示例对象  
+>b.btitle = '红楼梦' # 赋值操作  
+>b.save()  # 完成操作  
+>b.delete()  # 删除操作
+
+
+
+## 配置视图  
+视图的操作分两步:  
+1.定义视图  
+2.配置URLconf
+
+### 定义视图  
+1.定义视图  
+>视图就是一个Python函数，被定义在views.py中  
+>视图的第一个参数是HttpRequest类型的对象reqeust，包含了所有请求的信息  
+>视图必须返回HttpResponse对象，包含返回给请求者的响应信息  
+>打开booktest/views.py文件，定义视图index如下:  
+
+```
+#coding:utf-8
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("index")
+```
+2.配置URLconf  
+url 的配置分为两部分,第一步是用户request传递的信息到服务器的时候显示 项目的url 进行解析匹配如果匹配成功则传入到URL的函数中的第二个参数里去寻找去除这部分的剩下的信息.对于这个项目也即是先去test1 下的test1 下的urls.py 去匹配网址  
+
+> url(r'^',include('booktest.urls')) # 如果匹配成功那么就会将网址去掉最匹配的部分继续在booktest.urls中去匹配  
+> 现在网站的信息就被传递到了app中的urls去匹配了,如果匹配成功那么信息会继续往下传递找用户所请求的信息
+
+
+3.配置views.py  
+用户最终找的信息可以在app中的urls.py中匹配到并且在urls.py中的URL格式为:
+
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fhq82ye8dmj20gy05zq3k.jpg)  
+
+所以我们可以得到最后的匹配其实是在views 中找到对应的方法去返回给用户,views的格式如下:
+
+```
+# coding=utf-8
+from django.shortcuts import render
+
+# Create your views here.
+from booktest.models import BookInfo, HeroInfo
+
+
+def index(request): # 如果在url中匹配到的结果是view.index 那么就调用这个方法来返回给用户
+    book = BookInfo.objects.all()
+    context = {'b': book}
+    return render(request, 'index.html', context)  # 这里是返回给用的信息,是一个渲染的信息
+
+
+def details(request, id):
+    book = BookInfo.objects.get(pk=id)  # 这里我们可以导入数据库中的模块来获取信息返回函数进行render
+    herolist = book.heroinfo_set.all()  # 这里是查询操作
+    context = {'h': herolist}  # 这里要定义一个字典将信息传递进去
+    return render(request, 'details.html', context)  # 这里第二个参数就是指templates中的文件名称,第三个参数是要传递到第二个参数中
+    # 这样传进后就可以在templates中定义模板类型,这里的第二个参数要注意,使用的路径是去掉前面URL匹配后的路径
+```
+
+## 配置模板  
+首先在setting中找到DIRS 这选项将模板的路径填进去,BASE_DIR这个函数返回了整个项目的绝对路径,os.path.join 这个函数可以将第一个参数和第二个参数组合成 参数1/参数二的形式这样既始终能够找到模板所在的位置!  
+> 'DIRS': [os.path.join(BASE_DIR, 'templates')],   
+
+其实模板就相当于一个单独的网页,只不过数据是动态的可以从数据库中获取
+模板的语法:
+{{aaa}} : 显示内容,相当于print  
+{%for x in b%}...{%endfor%} : 循环
+
+---
+
+## 常见问题的理解
+---
+
+```
+/*创建好了的model中每个class相当于一个数据库的表,而类属性相当于数据库中的字段,如果两个表相关联使用了外键,那么被关联的类返回什么引用的外键就是什么*/
+class BookInfo(models.Model):
+    btitle = models.CharField(max_length=20)
+    bpub_date = models.DateField()
+
+    def __str__(self):
+        return self.btitle.encode('utf-8')  # 这里返回什么那么被应用外键就是什么
+
+
+class HeroInfo(models.Model):
+    hname = models.CharField(max_length=20)
+    hgender = models.BooleanField()
+    hcontent = models.CharField(max_length=100)
+    hBook = models.ForeignKey('BookInfo') # 这里使用了外键那么这个外键值就是BookInfo的str的返回值也就是b.title
+
+    def __str__(self):
+        return self.hname.encode('utf-8')
+```
+---
+
+```
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
+settings中的这个定义是找到项目所在的绝对路径,我们输出如下:
+# 这里每加一层就减少一次最基础的文件路径从内到外依次减少(settings.py-test1-test1)  
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
+print BASE_DIR
+输出的结果为:  
+/Users/cincheny/allproject/test1
+也就是说 os.path.dirname这个函数是用来找到当前文件的绝对路径的,而最后的__file__指的是当前文件,os.path.abspath是当前文件的绝对路径
+```  
+---
+
+
+---
