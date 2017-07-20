@@ -84,7 +84,7 @@ tags:
 1.首先定义模型
 app模型的定义在models.py中,要继承models.Model类
 定义如下
-```
+```python
 from django.db import models
 
 class BookInfo(models.Model):
@@ -124,7 +124,7 @@ python manage.py migrate
 3.注册模型类  
 在admin.py中设置如下代码:  
 
-```
+```python
 from django.contrib import admin
 from models import BookInfo,HeroInfo
 
@@ -157,7 +157,7 @@ admin.site.register(BookInfo,BookInfoAdmin)
 >视图必须返回HttpResponse对象，包含返回给请求者的响应信息  
 >打开booktest/views.py文件，定义视图index如下:  
 
-```
+```python
 #coding:utf-8
 from django.http import HttpResponse
 
@@ -178,7 +178,7 @@ url 的配置分为两部分,第一步是用户request传递的信息到服务�
 
 所以我们可以得到最后的匹配其实是在views 中找到对应的方法去返回给用户,views的格式如下:
 
-```
+```python
 # coding=utf-8
 from django.shortcuts import render
 
@@ -214,7 +214,7 @@ def details(request, id):
 ## 常见问题的理解
 ---
 
-```
+```python
 /*创建好了的model中每个class相当于一个数据库的表,而类属性相当于数据库中的字段,如果两个表相关联使用了外键,那么被关联的类返回什么引用的外键就是什么*/
 class BookInfo(models.Model):
     btitle = models.CharField(max_length=20)
@@ -235,7 +235,7 @@ class HeroInfo(models.Model):
 ```
 ---
 
-```
+```python
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
 settings中的这个定义是找到项目所在的绝对路径,我们输出如下:
 # 这里每加一层就减少一次最基础的文件路径从内到外依次减少(settings.py-test1-test1)  
