@@ -113,7 +113,7 @@ python manage.py migrate
 
 3.数据操作
 
-#### 可以在图形界面进行操作:  
+**可以在图形界面进行操作** :  
 1.首先修改图形界面的显示在setting.py中找到如下并设置:  
 >LANGUAGE_CODE = 'zh-Hans'  
 >TIME_ZONE = 'Asia/Shanghai'  
@@ -135,7 +135,7 @@ admin.site.register(BookInfo,BookInfoAdmin)
 ```  
 重新打开服务器: python manage.py runserver 然后在浏览器的网址后面加入admin就可以进入图形管理界面了
 
-#### 也可以在shell中进行操作:
+**也可以在shell中进行操作** :
 > python manage.py shell # 进入shell 进行操作,下面几个是基本的操作  
 > from ...  import   ...  
 >BookInfo.object.all() # 查询所有的图书信息  
