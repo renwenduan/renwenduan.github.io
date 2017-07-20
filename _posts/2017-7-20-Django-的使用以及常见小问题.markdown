@@ -81,7 +81,7 @@ tags:
 
 >3.通过类和对象完成数据crud
 
-### 1.首先定义模型
+1.首先定义模型
 app模型的定义在models.py中,要继承models.Model类
 定义如下
 ```
@@ -103,7 +103,7 @@ class HeroInfo(models.Model):
 
 ```
 
-### 2.迁移
+2.迁移
 数据库默认采用了sqlite3数据库,迁移分为两步完成:
 
 1.生成迁移文件:
@@ -111,7 +111,7 @@ python manage.py makemigrations
 2.执行迁移:
 python manage.py migrate
 
-### 3.数据操作
+3.数据操作
 
 #### 可以在图形界面进行操作:  
 1.首先修改图形界面的显示在setting.py中找到如下并设置:  
@@ -150,8 +150,7 @@ admin.site.register(BookInfo,BookInfoAdmin)
 视图的操作分两步:  
 1.定义视图  
 2.配置URLconf
-
-### 定义视图  
+ 
 1.定义视图  
 >视图就是一个Python函数，被定义在views.py中  
 >视图的第一个参数是HttpRequest类型的对象reqeust，包含了所有请求的信息  
