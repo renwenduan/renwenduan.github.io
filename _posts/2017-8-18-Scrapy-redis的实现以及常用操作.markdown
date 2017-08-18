@@ -1,0 +1,286 @@
+---
+layout:     post
+title:      "Scrapy-redis使用-部署以及常见问题"
+subtitle:   "使用redis构建分布式,从零开始使用redis心得"
+date:       2017-08-18
+author:     "Duanrw"
+header-img: "img/post-bg-js-module.jpg"
+tags:
+    - 爬虫
+    - 分布式
+    - python
+    - Scrapy-redis
+---
+
+## Foreword
+---
+使用Scrapy分布式爬取知乎所有用户个人信息!
+
+大规模抓取静态网页Scrapy绝对是利器!当然也可以使用requests库来自己实现,但是要自己写过滤器等组件,既然有现成的轮子并且还是很好的轮子就没必要再造一个了!  
+<div align=center>
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finwwbrovdj206b053weh.jpg)
+</div>  
+使用Scrapy时单一进程抓取的时候速度太慢,可以使用多进程,但是如果觉得还是慢,那么我们可以使用基于redis的分布式抓取,几台电脑或则服务器同时抓取来提升抓取效率!
+## Catalog  
+
+1.  [Scrapy introduction](#introduction)  
+2.  [How does Scrapy worked](#how does it worked)  
+3.  [Scrapy usage(zhiHuSpider)](#example for zhihu Scrapy)  
+4.  [modify the project to Scrapy-redis ](#modify the project base on redis)  
+5.  [Scrapy project work together on different machine](#upload to more machine)  
+6.  [Problem and Solve](#problem and how to resolve)  
+
+## Introduction of Scrapy  
+
+[An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way](https://scrapy.org/)这是官方对scrapy的描述. 从这里我们可以看到几个关键词[fast](),[simple](), [extensible]() 这也是我们使用scrapy的几个需求出发点.我们启动好了项目后建了APP后只需要简单的更改和设置就能完成一个网站的爬取,对于新手也是非常友好的!这使得开发更加快速便捷.整个过程中我们只要专注于如何提取数据就好了!Scrapy框架使用了异步的模式,可以加快我们的下载速度,并且内置了去重的过滤器,这也简化了我们的开发过程. 并且官方提供了部署工具[Scrapyd](https://github.com/scrapy/scrapyd-client)这让我们在部署的时候更方便.  
+
+详细信息可以移步官方网站[Scrapy](https://scrapy.org/),文档在这里[中文官方文档](http://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/overview.html), [英文官方文档](https://docs.scrapy.org/en/latest/)  
+
+---
+说了那么多,其实就想表达一件事:** 使用Scrapy,网络爬虫不再困难! ** 既然Scrapy有那么多好处,那么我们先来了解下它的原理吧
+
+## How does Scrapy worked
+
+引用网上的一张图来说明整个工作原理:
+<div align=center>
+![scrapy](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finuwg7c1xj20jg0dqdi2.jpg)
+</div>  
+可以看到整个Scrapy 有几个组件:
+
+Spider(蜘蛛),Scheduler(调度器),Downloader(下载器),Item Pipeline(管道),Engine(引擎),Downloader Middlewares(下载中间件),Spider Middlewares(蜘蛛中间件).我们引用网上的一个小故事来说明各个组件之间的关系:  
+
+代码写好，程序开始运行...  
+
+引擎：Hi！Spider, 你要处理哪一个网站？  
+
+Spider：老大要我处理xxxx.com。  
+
+引擎：你把第一个需要处理的URL给我吧。  
+
+Spider：给你，第一个URL是xxxxxxx.com。  
+
+引擎：Hi！调度器，我这有request请求你帮我排序入队一下(这里的是request对象,中间包含了url,下载工作是交给下载器来处理的)。  
+
+调度器：好的，正在处理你等一下。  
+
+引擎：Hi！调度器，把你处理好的request请求给我。  
+
+调度器：给你，这是我处理好的request  
+
+引擎：Hi！下载器，你按照老大的下载中间件的设置帮我下载一下这个request请求  
+
+下载器：好的！给你，这是下载好的东西。（如果失败：sorry，这个request下载失败了。然后引擎告诉调度器，这个request下载失败了，你记录一下，我们待会儿再下载）  
+
+引擎：Hi！Spider，这是下载好的东西，并且已经按照老大的下载中间件处理过了，你自己处理一下（注意！这儿responses默认是交给def parse()这个函数处理的）  
+
+Spider：（处理完毕数据之后对于需要跟进的URL），Hi！引擎，我这里有两个结果，这个是我需要跟进的URL，还有这个是我获取到的Item数据。  
+
+引擎：Hi ！管道 我这儿有个item你帮我处理一下！调度器！这是需要跟进URL你帮我处理下。然后从第四步开始循环，直到获取完老大需要全部信息。  
+
+管道调度器：好的，现在就做！  
+
+>注意！只有当调度器中不存在任何request了，整个程序才会停止，（也就是说，对于下载失败的URL，Scrapy也会重新下载。）
+
+通过这个小故事可以清楚的知道--spider获取连接交给调度器,调度器来去重后将下载连接交给下载器,下载器下载好了东西交给蜘蛛,然后需要的内容就交给管道,如果还有连接就再次交给调度器...  
+
+总结一下:  
+* 引擎(Scrapy): 用来处理整个系统的数据流处理, 触发事务(框架核心)  
+* 调度器(Scheduler):  用来接受引擎发过来的请求, 压入队列中, 并在引擎再次请求的时候返回. 可以想像成一个URL（抓取网页的网址或者说是链接）的优先队列, 由它来决定下一个要抓取的网址是什么, 同时去除重复的网址  
+* 下载器(Downloader): 用于下载网页内容, 并将网页内容返回给蜘蛛(Scrapy下载器是建立在twisted这个高效的异步模型上的)  
+* 爬虫(Spiders): 爬虫是主要干活的, 用于从特定的网页中提取自己需要的信息, 即所谓的实体(Item)。用户也可以从中提取出链接,让Scrapy继续抓取下一个页面  
+* 项目管道(Pipeline): 负责处理爬虫从网页中抽取的实体，主要的功能是持久化实体、验证实体的有效性、清除不需要的信息。当页面被爬虫解析后，将被发送到项目管道，并经过几个特定的次序处理数据。  
+* 下载器中间件(Downloader Middlewares): 位于Scrapy引擎和下载器之间的框架，主要是处理Scrapy引擎与下载器之间的请求及响应。  
+* 爬虫中间件(Spider Middlewares): 介于Scrapy引擎和爬虫之间的框架，主要工作是处理蜘蛛的响应输入和请求输出。  
+* 调度中间件(Scheduler Middewares): 介于Scrapy引擎和调度之间的中间件，从Scrapy引擎发送到调度的请求和响应。
+
+
+理解了整个工作原理我们开始动手! 还是那句话:如果你想了解一个框架,** Just Do It ! ** 这里我们使用一个爬取知乎所有用户的爬虫来演示!
+
+# Scrapy Usage  
+#### 思路分析:
+抛开框架我们来分析下我们爬取的原理: 我们从一个关注的人开始,获取这个关注的人的信息并储存下来,然后获取这个关注的人的的关注的人和粉丝,再去获取关注人的人的信息并存储循环往复下去就实现了从一个人开始层层抓取下去.来张图-借鉴传销图:  
+<div align=center>
+![爬取原理](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finvsfmdwaj20dc08pjrg.jpg)
+</div>  
+当然如果一个人没有关注人没有粉丝那就算了,放过他们!我们可以利用[递归](https://zh.wikipedia.org/zh-hans/%E9%80%92%E5%BD%92)的思想来实现这个思路
+
+#### 环境配置:
+推荐使用虚拟环境来创建环境  虚拟环境教程在[这里](http://www.jianshu.com/p/08c657bd34f1)  
+python3, Scrapy, mongodb, pymongo, redis, python_redis, Scrapyd, scrapyd-client
+安装过程中可能出现报错,我把我安装过程中报错的信息以及解决方法写到了文章的结尾  
+1.安装Scrapy系列以及连接数据库的包
+> $ pip install Scrapy Scrapyd scrapyd-client pymongo redis python_redis
+
+如果你没有安装pip 请按照下面的方法来安装:  
+>$ wget https://bootstrap.pypa.io/get-pip.py  
+...  
+$ sudo python get-pip.py install
+
+2.安装mongodb:
+这里使用官方的教程:[官方教程](https://www.mongodb.com/download-center?jmp=tutorials&_ga=2.71069011.218377571.1503039811-1991435481.1501574113#community)   
+
+选择自己的系统查看教程进行选择教程安装  
+<div align=center>
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finw4xt416j20ll0b2t9z.jpg)
+</div>
+---
+
+#### 创建项目
+以上环境安装好里以后,在终端下输入:
+> $ scrapy startproject zhihuScrapy  
+
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finz3mgcjkj20i6047q3k.jpg)  
+
+#### 创建爬虫  
+> $ cd zhihuScrapy  
+> $ scrapy genspider zhihu www.zhihu.com  
+第三个参数为爬虫名字,第四个为爬取的范围   
+
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finz36q4nwj20i7038jrm.jpg)     
+
+这是整个项目的结构  
+
+> ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finz4fdv69j20i309xwf2.jpg)  
+
+在pycharm中打开项目(选择你喜欢的编辑器,这里我们使用pycharm)
+
+#### 改写项目文件
+```python
+# -*- coding: utf-8 -*-
+# 手动翻译设置文件
+# Scrapy settings for zhihuScrapy project
+#
+# For simplicity, this file contains only settings considered important or
+# commonly used. You can find more settings consulting the documentation:
+#
+#     http://doc.scrapy.org/en/latest/topics/settings.html
+#     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
+#     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+# 项目名称
+BOT_NAME = 'zhihuScrapy'
+# Scrapy搜索spider的模块列表
+SPIDER_MODULES = ['zhihuScrapy.spiders']
+# 默认使用 genspider 命令创建新spider的模块
+NEWSPIDER_MODULE = 'zhihuScrapy.spiders'
+
+# Crawl responsibly by identifying yourself (and your website) on the user-agent
+# 爬取的默认User-Agent 可以被覆盖
+# USER_AGENT = 'zhihuScrapy (+http://www.yourdomain.com)'
+
+# Obey robots.txt rules
+# 如果启用，Scrapy将遵守robots.txt策略
+ROBOTSTXT_OBEY = True
+
+# Configure maximum concurrent requests performed by Scrapy (default: 16)
+# Scrapy downloader 并发请求(concurrent requests)的最大值
+# CONCURRENT_REQUESTS = 32
+
+# Configure a delay for requests for the same website (default: 0)
+# See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
+# See also autothrottle settings and docs
+# 下载器在下载同一个网站下一个页面前需要等待的时间
+# DOWNLOAD_DELAY = 3
+# The download delay setting will honor only one of:
+# 对单个网站进行并发请求的最大值
+# CONCURRENT_REQUESTS_PER_DOMAIN = 16
+# 对单个IP进行并发请求的最大值。如果非0，则忽略
+# CONCURRENT_REQUESTS_PER_IP = 16
+
+# Disable cookies (enabled by default)
+# 是否启用cookie
+# COOKIES_ENABLED = False
+
+# Disable Telnet Console (enabled by default)
+# 表明 telnet 终端 (及其中间件)是否启用的布尔值
+# TELNETCONSOLE_ENABLED = False
+
+# Override the default request headers:
+# 默认request请求头信息
+# DEFAULT_REQUEST_HEADERS = {
+#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+#   'Accept-Language': 'en',
+# }
+
+# Enable or disable spider middlewares
+# 启用或者不启用spider中间件
+# See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+# Spider 中间件
+# SPIDER_MIDDLEWARES = {
+#    'zhihuScrapy.middlewares.ZhihuscrapySpiderMiddleware': 543,
+# }
+
+# Enable or disable downloader middlewares
+# 启用或者不启用下载中间件
+# See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
+# DOWNLOADER_MIDDLEWARES = {
+#    'zhihuScrapy.middlewares.MyCustomDownloaderMiddleware': 543,
+# }
+
+# Enable or disable extensions
+# 保存项目中启用的中间件及其顺序的字典。
+# See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
+# EXTENSIONS = {
+#    'scrapy.extensions.telnet.TelnetConsole': None,
+# }
+
+# Configure item pipelines
+# 项目管道配置
+# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
+# ITEM_PIPELINES = {
+#    'zhihuScrapy.pipelines.ZhihuscrapyPipeline': 300,
+# }
+
+# Enable and configure the AutoThrottle extension (disabled by default)
+# 启用AutoThrottle配置列表
+# See http://doc.scrapy.org/en/latest/topics/autothrottle.html
+# 启用AutoThrottle扩展。
+# AUTOTHROTTLE_ENABLED = True
+# The initial download delay
+# 初始下载延迟
+# AUTOTHROTTLE_START_DELAY = 5
+# The maximum download delay to be set in case of high latencies
+# 起用AutoThrottle调试(debug)模式，展示每个接收到的response
+# AUTOTHROTTLE_MAX_DELAY = 60
+# The average number of requests Scrapy should be sending in parallel to
+# each remote server
+# AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
+# Enable showing throttling stats for every response received:
+# 起用AutoThrottle调试(debug)模式，展示每个接收到的response
+# AUTOTHROTTLE_DEBUG = False
+
+# Enable and configure HTTP caching (disabled by default)
+# 启用HTTP配置缓存
+# See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
+# 启用缓存
+# HTTPCACHE_ENABLED = True
+# 缓存的request的超时时间，单位秒。
+# HTTPCACHE_EXPIRATION_SECS = 0
+# 存储(底层的)HTTP缓存的目录
+# HTTPCACHE_DIR = 'httpcache'
+# 不缓存设置中的HTTP返回值(code)的request
+# HTTPCACHE_IGNORE_HTTP_CODES = []
+# 实现缓存存储后端的类
+# HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+```
+我们需要改写的几个地方列出来大家可以去上面代码中Ctrl+f搜索
+```python
+ROBOTSTXT_OBEY = False  # 这个不禁用,遵守协议还怎么爬,人家默认不让你爬啊
+DEFAULT_REQUEST_HEADERS = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'en',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
+}
+ # 这里填写你请求头,否则爬取报错
+```
+改好了让我们启用一下爬虫:  
+> $ scrapy crawl zhihu
+
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio11zl7yrj20ln05yjsh.jpg)  
+这说明我们的爬虫可以启用成功了! 下面就开始写爬虫的spider吧!  
+#### 编写spider  
+
+## Modify the Project to Scrapy-redis
+
+## Scrapy project work together on different machine (scrapyd)
+
+## Problem and Solve
