@@ -31,7 +31,7 @@ tags:
 
 ## Introduction of Scrapy  
 
-[An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way](https://scrapy.org/)这是官方对scrapy的描述. 从这里我们可以看到几个关键词[fast](),[simple](), [extensible]() 这也是我们使用scrapy的几个需求出发点.我们启动好了项目后建了APP后只需要简单的更改和设置就能完成一个网站的爬取,对于新手也是非常友好的!这使得开发更加快速便捷.整个过程中我们只要专注于如何提取数据就好了!Scrapy框架使用了异步的模式,可以加快我们的下载速度,并且内置了去重的过滤器,这也简化了我们的开发过程. 并且官方提供了部署工具[Scrapyd](https://github.com/scrapy/scrapyd-client)这让我们在部署的时候更方便.  
+[An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way](https://scrapy.org/)这是官方对scrapy的描述. 从这里我们可以看到几个关键词 **fast** , **simple** , **extensible**  这也是我们使用scrapy的几个需求出发点.我们启动好了项目后建了APP后只需要简单的更改和设置就能完成一个网站的爬取,对于新手也是非常友好的!这使得开发更加快速便捷.整个过程中我们只要专注于如何提取数据就好了!Scrapy框架使用了异步的模式,可以加快我们的下载速度,并且内置了去重的过滤器,这也简化了我们的开发过程. 并且官方提供了部署工具[Scrapyd](https://github.com/scrapy/scrapyd-client)这让我们在部署的时候更方便.
 
 详细信息可以移步官方网站[Scrapy](https://scrapy.org/),文档在这里[中文官方文档](http://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/overview.html), [英文官方文档](https://docs.scrapy.org/en/latest/)  
 
