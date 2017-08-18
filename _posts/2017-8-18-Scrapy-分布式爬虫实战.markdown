@@ -38,7 +38,7 @@ tags:
 详细信息可以移步官方网站[Scrapy](https://scrapy.org/),文档在这里[中文官方文档](http://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/overview.html), [英文官方文档](https://docs.scrapy.org/en/latest/)  
 
 ---
-说了那么多,其实就想表达一件事:** 使用Scrapy,网络爬虫不再困难! ** 既然Scrapy有那么多好处,那么我们先来了解下它的原理吧
+说了那么多,其实就想表达一件事:**使用Scrapy,网络爬虫不再困难!** 既然Scrapy有那么多好处,那么我们先来了解下它的原理吧
 
 ## How does Scrapy worked
 
@@ -96,7 +96,7 @@ Spider：（处理完毕数据之后对于需要跟进的URL），Hi！引擎，
 * 调度中间件(Scheduler Middewares): 介于Scrapy引擎和调度之间的中间件，从Scrapy引擎发送到调度的请求和响应。
 
 
-理解了整个工作原理我们开始动手! 还是那句话:如果你想了解一个框架,** Just Do It ! ** 这里我们使用一个爬取知乎所有用户的爬虫来演示!
+理解了整个工作原理我们开始动手! 还是那句话:如果你想了解一个框架,**Just Do It !** 这里我们使用一个爬取知乎所有用户的爬虫来演示!
 
 # Scrapy Usage  
 #### 思路分析:
@@ -362,25 +362,25 @@ class UserItem(Item):
 
 我们再看关注的人的列表里返回的内容有什么信息:  
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio48bnld8j20rp0dzn0b.jpg)  
-这里我们要特别关注一下这个 ** url_token ** 因为这个是我们获取下一个人的接口!  
+这里我们要特别关注一下这个 **url_token** 因为这个是我们获取下一个人的接口!
 
 列表有下一页怎么办,别着急看这请求的返回结果这里:  
 ![判断是否有下一页](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio44ic9u2j20l604g0tm.jpg)   
 
 我们翻到最后一页:  
 ![最后一页](https://ws1.sinaimg.cn/mw690/b3c7bdb6ly1fio458wn0zj20o30cejtw.jpg)  
-发现没有:如果有下一页返回的结果中会返回一个 ** 'next'** 并且 ** is_end ** 为false!  
+发现没有:如果有下一页返回的结果中会返回一个 **'next'** 并且 **is_end** 为false!
 
 通过上面的分析我们大致有这样一个思路,我们看下用户详情接口在哪里，我们将鼠标放到关注列表任意一个头像上面，观察下网络请求，可以发现又会出现一个Ajax请求:
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio4okhoejj20x40d4n0r.jpg)  
 https://www.zhihu.com/api/v4/members/wangxiaofeng?include=....  
-这个网址,只需要将members/ 后的名字换为我们要访问的人的url_token就好了至于后面的include本来是什么就是什么,貌似不影响,关于个人信息的获取我们就到这,那么这个url_token怎么获得呢?查看他的粉丝列表信息里是不是有这个信息,我们只需要得到没个粉丝的url_token然后穿进去就可以得到这个粉丝的个人信息啦. 然后就是关于翻页的,我们在获取完这个人的当前粉丝列表后去判断一下返回的 ** paging ** 里面的is_end 是否为true 就好啦,如果为true 那就不要再翻页了!  
+这个网址,只需要将members/ 后的名字换为我们要访问的人的url_token就好了至于后面的include本来是什么就是什么,貌似不影响,关于个人信息的获取我们就到这,那么这个url_token怎么获得呢?查看他的粉丝列表信息里是不是有这个信息,我们只需要得到没个粉丝的url_token然后穿进去就可以得到这个粉丝的个人信息啦. 然后就是关于翻页的,我们在获取完这个人的当前粉丝列表后去判断一下返回的 **paging** 里面的is_end 是否为true 就好啦,如果为true 那就不要再翻页了!
 那么我们怎么获取另外一个人的粉丝列表呢看这个接口  
 https://www.zhihu.com/api/v4/members/wangxiaofeng/publications?include...  
-我们只要把 ** members/ ** 后面的人名换成url_token里的人名就可以获得这个人的粉丝列表啦!到这里整个分析就结束了,是不是很简单. 那么我们怎么实现整个知乎所有用户的爬取呢?我画了一个简图,不好看,凑合着看吧:  
+我们只要把 **members/** 后面的人名换成url_token里的人名就可以获得这个人的粉丝列表啦!到这里整个分析就结束了,是不是很简单. 那么我们怎么实现整个知乎所有用户的爬取呢?我画了一个简图,不好看,凑合着看吧:
 ![流程信息](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio5fcpml3j20xf0hrac0.jpg)  
 
-整个流程使用了 ** 递归的思想 ** 来实现,为了方便查看我们将流程拆分为两个方法,用Python当然是面向对象Class来写,下面就上spider.py的代码:
+整个流程使用了 **递归的思想** 来实现,为了方便查看我们将流程拆分为两个方法,用Python当然是面向对象Class来写,下面就上spider.py的代码:
 ```Python
 # -*- coding: utf-8 -*-
 from scrapy import Spider, Request
