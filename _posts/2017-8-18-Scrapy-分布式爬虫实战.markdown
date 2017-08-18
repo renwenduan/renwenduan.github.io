@@ -282,17 +282,299 @@ DEFAULT_REQUEST_HEADERS = {
 状态码为200!这说明我们的爬虫可以启用成功了, 下面就开始写爬虫的spider吧!
 #### 编写spider
 首先我们去分析这个知乎的用户信息:首先我们找个用户(这里我们使用[带三个表](https://www.zhihu.com/people/wangxiaofeng/answers)这个人的首页)先去看下知乎的network并刷新,查看返回的首页(answers)file,发现并没有我们想要的内容,那我们就开始一个一个network里的信息了,通常情况下是使用XHR这个来查看能获得意外惊喜,因为很多网站使用json来传递信息!当然这样也为我们获取数据提供了便捷,我们只要找到这个api就行了!经过一番查找我们得到了几个请求有用:  
-![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio3o43o16j20iz053dgv.jpg)  
+![总图分析](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio3o43o16j20iz053dgv.jpg)  
+
 个人信息:  
-![个人信息](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio3mrt4ifj20sd0hsq7d.jpg)  
+![个人信息](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio3mrt4ifj20sd0hsq7d.jpg)   
+
+
+通过这个图我们就要定义要获取的个人用户的信息哟那些了:定义这些都是在item.py中实现的:   
+```python
+from scrapy import Item
+from scrapy import Field # 这里可以直接导入方法节省力气
+
+class UserItem(Item):
+''' 定义需要保存的字段有哪些'''
+    account_status = Field()
+    allow_message = Field()
+    answer_count = Field()
+    articles_count = Field()
+    avatar_hue = Field()
+    avatar_url = Field()
+    avatar_url_template = Field()
+    badge = Field()
+    business = Field()
+    columns_count = Field()
+    commercial_question_count = Field()
+    cover_url = Field()
+    description = Field()
+    educations = Field()
+    employments = Field()
+    favorite_count = Field()
+    favorited_count = Field()
+    follower_count = Field()
+    following_columns_count = Field()
+    following_count = Field()
+    following_favlists_count = Field()
+    following_question_count = Field()
+    following_topic_count = Field()
+    gender = Field()
+    headline = Field()
+    hosted_live_count = Field()
+    id = Field()
+    is_active = Field()
+    is_advertiser = Field()
+    is_bind_sina = Field()
+    is_blocked = Field()
+    is_blocking = Field()
+    is_followed = Field()
+    is_following = Field()
+    is_force_renamed = Field()
+    is_org = Field()
+    is_privacy_protected = Field()
+    locations = Field()
+    logs_count = Field()
+    marked_answers_count = Field()
+    marked_answers_text = Field()
+    message_thread_token = Field()
+    mutual_followees_count = Field()
+    name = Field()
+    participated_live_count = Field()
+    pins_count = Field()
+    question_count = Field()
+    show_sina_weibo = Field()
+    thank_from_count = Field()
+    thank_to_count = Field()
+    thanked_count = Field()
+    type = Field()
+    url = Field()
+    url_token = Field()
+    user_type = Field()
+    vote_from_count = Field()
+    vote_to_count = Field()
+    voteup_count = Field()
+
+```
+
+
 关注人列表:  
-![关注人列表](https://ws1.sinaimg.cn/mw690/b3c7bdb6ly1fio3ng5921j20v309ftb8.jpg)  
+![关注人列表](https://ws1.sinaimg.cn/mw690/b3c7bdb6ly1fio3ng5921j20v309ftb8.jpg)   
+
+我们再看关注的人的列表里返回的内容有什么信息:  
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio48bnld8j20rp0dzn0b.jpg)  
+这里我们要特别关注一下这个 ** url_token ** 因为这个是我们获取下一个人的接口!  
+
+列表有下一页怎么办,别着急看这请求的返回结果这里:  
+![判断是否有下一页](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio44ic9u2j20l604g0tm.jpg)   
+
+我们翻到最后一页:  
+![最后一页](https://ws1.sinaimg.cn/mw690/b3c7bdb6ly1fio458wn0zj20o30cejtw.jpg)  
+发现没有:如果有下一页返回的结果中会返回一个 ** 'next'** 并且 ** is_end ** 为false!  
+
+通过上面的分析我们大致有这样一个思路,我们看下用户详情接口在哪里，我们将鼠标放到关注列表任意一个头像上面，观察下网络请求，可以发现又会出现一个Ajax请求:
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio4okhoejj20x40d4n0r.jpg)  
+https://www.zhihu.com/api/v4/members/wangxiaofeng?include=....  
+这个网址,只需要将members/ 后的名字换为我们要访问的人的url_token就好了至于后面的include本来是什么就是什么,貌似不影响,关于个人信息的获取我们就到这,那么这个url_token怎么获得呢?查看他的粉丝列表信息里是不是有这个信息,我们只需要得到没个粉丝的url_token然后穿进去就可以得到这个粉丝的个人信息啦. 然后就是关于翻页的,我们在获取完这个人的当前粉丝列表后去判断一下返回的 ** paging ** 里面的is_end 是否为true 就好啦,如果为true 那就不要再翻页了!  
+那么我们怎么获取另外一个人的粉丝列表呢看这个接口  
+https://www.zhihu.com/api/v4/members/wangxiaofeng/publications?include...  
+我们只要把 ** members/ ** 后面的人名换成url_token里的人名就可以获得这个人的粉丝列表啦!到这里整个分析就结束了,是不是很简单. 那么我们怎么实现整个知乎所有用户的爬取呢?我画了一个简图,不好看,凑合着看吧:  
+![流程信息](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio5fcpml3j20xf0hrac0.jpg)  
+
+整个流程使用了 ** 递归的思想 ** 来实现,为了方便查看我们将流程拆分为两个方法,用Python当然是面向对象Class来写,下面就上spider.py的代码:
+```Python
+# -*- coding: utf-8 -*-
+from scrapy import Spider, Request
+import json
+from zhihu.items import UserItem
 
 
+class ZhihuSpider(Spider):
+    name = 'zhihu'
+    allowed_domains = ['www.zhihu.com']  # 定义爬虫能爬取的范围
+    start_urls = ['http://www.zhihu.com/']  # 开始的url
+    start_user = 'hypnova'  # 这是我们传进去的第一个人,我们将从他开始获取他的粉丝,然后获取他粉丝的粉丝,然后获取他粉丝的粉丝的粉丝,然后.....
+
+    # 个人信息接口
+    user_info_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'  # 使用.format方法来动态获取每个用户的信息
+    # include 内容单独取出来
+    user_query = 'locations,employments,gender,educations,business,voteup_count,thanked_Count,follower_count,following_count,cover_url,following_topic_count,following_question_count,following_favlists_count,following_columns_count,avatar_hue,answer_count,articles_count,pins_count,question_count,columns_count,commercial_question_count,favorite_count,favorited_count,logs_count,marked_answers_count,marked_answers_text,message_thread_token,account_status,is_active,is_bind_phone,is_force_renamed,is_bind_sina,is_privacy_protected,sina_weibo_url,sina_weibo_name,show_sina_weibo,is_blocking,is_blocked,is_following,is_followed,mutual_followees_count,vote_to_count,vote_from_count,thank_to_count,thank_from_count,thanked_count,description,hosted_live_count,participated_live_count,allow_message,industry_category,org_name,org_homepage,badge[?(type=best_answerer)].topics'
+
+    # 用户关注信息接口
+    follower_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?include={include}&offset={offset}&limit={limit}'
+    # include 内容单独取出来
+    follower_query = 'data[*].is_normal,admin_closed_comment,reward_info,is_collapsed,annotation_action,annotation_detail,collapse_reason,collapsed_by,suggest_edit,comment_count,can_comment,content,voteup_count,reshipment_settings,comment_permission,mark_infos,created_time,updated_time,review_info,relationship.is_authorized,voting,is_author,is_thanked,is_nothelp,upvoted_followees;data[*].author.badge[?(type=best_answerer)].topics'
+
+    # 关注用户的人接口
+    followee_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?include={include}&offset={offset}&limit={limit}'
+    # include 内容单独取出来
+    followee_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge[?(type=best_answerer)].topics'
+
+    def start_requests(self):
+        '''这个方法用来获取启动各个方法'''
+        yield Request(self.user_info_url.format(user=self.start_user, include=self.user_query),callback=self.user_info_parse)
+
+        yield Request(self.follower_url.format(user=self.start_user, include=self.follower_query, offset=0, limit=20),callback=self.follower_info_parse)
+
+        yield Request(self.followee_url.format(user=self.start_user, include=self.followee_query, offset=0, limit=20),callback=self.followee_info_parse)
+
+    def user_info_parse(self, response):
+        '''用来获取用户个人信息的方法,并将这个人的url_token传递给获取用户粉丝和关注列表的函数以获得这个人的粉丝和关注列表'''
+
+        # 将获取到的Python对象转换为json对象
+        result = json.loads(response.text)
+
+        # 实例化一个item用来传递信息
+        item = UserItem()
+
+        # 这个方法很有用可以快速取得自己要的内容(json返回),然后在使用判断进行快速赋值
+        for field in item.fields:
+
+            # 保证取到了我们定义好的数据而没有定义的数据不会出现
+            if field in result.keys():
+                # 依次给item赋值
+                item[field] = result.get(field)
+
+        # 返回给item
+        yield item
+
+        # 将url_token传递给获取用户粉丝列表的函数
+        yield Request(
+            self.follower_url.format(user=result['url_token'], include=self.follower_query, offset=0, limit=20),
+            callback=self.follower_info_parse)
+
+        # 将url_token传递给获取用户关注列表的函数
+        yield Request(
+            self.followee_url.format(user=result['url_token'], include=self.followee_query, offset=0, limit=20),
+            callback=self.followee_info_parse)
+
+    def follower_info_parse(self, response):
+        '''当我们得到了用户的关注者后,将这些关注者再次调用这个方法,继续得到关注者, 这里采用了递归的思想'''
+
+        # 将Python对象转换为json对象
+        result = json.loads(response.text)
+
+        # 判断返回的数据中是否有data如果有就获取这个人的url,如果没有就去判断是否有下一页
+        if 'data' in result.keys():
+
+            # 循环遍历data中的每个人,然后获取他的url_token传给user_info_parse函数处理
+            for user in result.get('data'):
+
+                # 传递url_token给个人信息处理函数进行处理
+                yield Request(self.user_info_url.format(user=user.get('url_token'), include=self.user_query),
+                              callback=self.user_info_parse)
+
+        # 判断是否有下一页
+        if 'paging' in result.keys() and result.get('paging').get('is_end') == False:
+            '''这里判断用户的列表有么有下一页,这个功能在每次取完本页后调用,没有就结束,有就将下一页的网址传给自己继续获得永不'''
+            next_url = result.get('paging').get('next')
+
+            # 有下一页就调用自己将下一页的信息继续获取
+            yield Request(next_url, callback=self.follower_info_parse)
+
+    def followee_info_parse(self, response):
+        '''这里同上面的分析'''
+        result = json.loads(response.text)
+        if 'data' in result.keys():
+            for user in result.get('data'):
+                yield Request(self.user_info_url.format(user=user.get('url_token'), include=self.followee_query),
+                              callback=self.user_info_parse)
+        if 'paging' in result.keys() and result.get('paging').get('is_end') == False:
+            next_url = result.get('paging').get('next')
+            yield Request(next_url, callback=self.followee_info_parse)
 
 
+```  
+
+只是爬下来为了以后做数据分析,我们要存起来来,这里我使用了mongodb这个非关系型数据库来存储,而这些存储的过程都是在piplines.py中完成的,并且在scrapy中为我们提供了多中接口供我们使用,这里我们直接使用他的pymongo接口官方文档举例:  
+```python
+# In this example we’ll write items to MongoDB using pymongo. MongoDB address and database name are specified in Scrapy settings; MongoDB collection is named after item class.
+
+# The main point of this example is to show how to use from_crawler() method and how to clean up the resources properly.:
+import pymongo
+
+class MongoPipeline(object):
+
+    collection_name = 'scrapy_items'
+
+    def __init__(self, mongo_uri, mongo_db):
+        self.mongo_uri = mongo_uri
+        self.mongo_db = mongo_db
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            mongo_uri=crawler.settings.get('MONGO_URI'),
+            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
+        )
+
+    def open_spider(self, spider):
+        self.client = pymongo.MongoClient(self.mongo_uri)
+        self.db = self.client[self.mongo_db]
+
+    def close_spider(self, spider):
+        self.client.close()
+
+    def process_item(self, item, spider):
+        self.db[self.collection_name].insert_one(dict(item))
+        return item
+'''  
+还支持  
+* Write items to a JSON file
+* Write items to MongoDB
+更多方法请看[这里](https://doc.scrapy.org/en/latest/topics/item-pipeline.html),所以我们可以改写这个例子然后在设置中设置数据库:
 
 
+```python
+import pymongo
+
+
+class MongoPipeline(object):
+    def __init__(self, mongo_uri, mongo_db):
+        self.mongo_uri = mongo_uri  # 这里可以在setting中指定数据库和集合
+        self.mongo_db = mongo_db
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            mongo_uri=crawler.settings.get('MONGO_URI'),
+            mongo_db=crawler.settings.get('MONGO_DATABASE')
+        )
+
+    def open_spider(self, spider):
+        self.client = pymongo.MongoClient(self.mongo_uri)
+        self.db = self.client[self.mongo_db]
+
+    def close_spider(self, spider):
+        self.client.close()
+
+    def process_item(self, item, spider):
+        self.db['user'].update({'url_token': item['url_token']}, {'$set': item}, True)
+        # 这里是mongod 的更新操作,如果查询到了那么就使用第一个参数为查询条件,第二个通过$set指定更新的条件,第三个参数表示如果存在则更新如果不存在则插入
+        return item
+```  
+
+然后在setting.py中写入数据库的设置:  
+
+'''python
+MONGO_URI = 'localhost'  # 这里设置本地数据库
+MONGO_DATABASE = 'zhihu'  # 这里指定数据库的名字,如果不存在就会自动创建
+'''  
+
+另外在setting.py中记得开启一下Item Pileline  
+
+'''python  
+ITEM_PIPELINES = {
+    'zhihu.pipelines.MongoPipeline': 300,
+}
+
+'''   
+
+然后重新运行爬虫查看数据库就可以看到这里有数据存进来了!
+
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio757oc8sj20al07udgn.jpg)  
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio75m6xhpj20kh0980vd.jpg)
+
+到这里我们单一的爬虫就结束了,当然你会发现虽然很快但是如果对于百万或者千万级别的数据开说还是太慢了,多进程可以解决这个问题,但是又会有另外一个问题,那就是数据重复的问题.下面我们就来说说分布式的好处!
 
 ## Modify the Project to Scrapy-redis
 
