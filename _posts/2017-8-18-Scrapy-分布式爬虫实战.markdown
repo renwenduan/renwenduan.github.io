@@ -556,13 +556,16 @@ class MongoPipeline(object):
 然后在setting.py中写入数据库的设置:  
 
 '''python
+
 MONGO_URI = 'localhost'  # 这里设置本地数据库
 MONGO_DATABASE = 'zhihu'  # 这里指定数据库的名字,如果不存在就会自动创建
+
 '''  
 
 另外在setting.py中记得开启一下Item Pileline  
 
-'''python  
+'''python
+
 ITEM_PIPELINES = {
     'zhihu.pipelines.MongoPipeline': 300,
 }
