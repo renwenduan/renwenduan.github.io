@@ -1,0 +1,44 @@
+---
+layout:     post
+title:      "Scrapy爬取知乎所有用户实战(下)"
+subtitle:   "Scrapy-redis开启分布式爬取"
+date:       2017-08-18
+author:     "Duanrw"
+header-img: "img/post-bg-js-module.jpg"
+catalog: true
+header-mask: 0.3
+tags:
+    - 爬虫
+    - Scrapy
+    - python
+    - 分布式
+    - Scrapy-redis
+---
+
+## Foreword
+---
+
+> 当你用scrapy写好一个爬虫后,惬意的坐在凳子上看它在运动,老板走过来...  
+老板: 东西做好了吗?  
+你: 做好了做好了,每分钟能爬1000条数据.  
+老板: 那好,你爬1000~万~条数据给我!  
+你: 好好好,没问题!  
+老板: 那尽快给我!  
+你: 不就1000w吗?我一分钟爬1000条,那就要1000w/1000/60/24= 神马?要7天? 怎么办多进程吧,数据会重复爬取,怎么办怎么办?  还能怎么办,当然是分布式了!  
+
+---
+
+## Catalog
+1. Why should we use distributed system?
+2. Scrapy-redis analyze  
+3. How to use Scrapy-redis  
+4. Use the Scrapyd to Deploy the project  
+
+## Why should we use distributed system
+从上面的故事也可以看到了,我们有两个需求:
+* 快速大规模抓取
+* 不重复抓取  
+对于多进程来说我们如果同时开启多个进程来运行爬虫那么就会造成数据的重复,对于同以条信息,因为多个个进程之间并不知道是否抓取了这个信息,就会无论如何都会抓取,这样就造成了资源的浪费,也没有提升效率.所以我们要是能改造下scrapy的调度器就好了,这样就会让爬虫同时从一个队列里取用数据!这样就避免了重复,同时也可以开很多进程来运行同一个队列里的请求,然后再将获得的需要处理的请求同时放入调度器,让调度器统一分配!那么这个队列怎么实现呢? **Scrapy-redis** 别人已将早好了轮子了, 我们只要理解下原理然后拿来用就好了
+
+
+## Scrapy project work together on different machine (scrapyd)

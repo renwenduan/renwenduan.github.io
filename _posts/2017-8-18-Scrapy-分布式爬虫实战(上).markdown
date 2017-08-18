@@ -27,7 +27,8 @@ tags:
 1.  [Scrapy introduction](#introduction)  
 2.  [How does Scrapy worked](#how does it worked)  
 3.  [Scrapy usage(zhiHuSpider)](#example for zhihu Scrapy)  
-4.  [Problem and Solve](#problem and how to resolve)  
+4.  [Problem and Solve](#problem and how to resolve)
+
 ## Introduction of Scrapy  
 
 [An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way](https://scrapy.org/)这是官方对scrapy的描述. 从这里我们可以看到几个关键词[fast](),[simple](), [extensible]() 这也是我们使用scrapy的几个需求出发点.我们启动好了项目后建了APP后只需要简单的更改和设置就能完成一个网站的爬取,对于新手也是非常友好的!这使得开发更加快速便捷.整个过程中我们只要专注于如何提取数据就好了!Scrapy框架使用了异步的模式,可以加快我们的下载速度,并且内置了去重的过滤器,这也简化了我们的开发过程. 并且官方提供了部署工具[Scrapyd](https://github.com/scrapy/scrapyd-client)这让我们在部署的时候更方便.  
@@ -578,4 +579,6 @@ ITEM_PIPELINES = {
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fio848voa2g203c03c40e.jpg)  
 
 
-## Problem and Solve
+## Problem and Solve  
+
+* 安装scrapy报错' error: command 'x86_64-linux-gnu-gcc' failed with exit status 1 '  [这里](https://github.com/scrapy/scrapy/issues/2115)  [或者这里](https://stackoverflow.com/questions/26053982/error-setup-script-exited-with-error-command-x86-64-linux-gnu-gcc-failed-wit)  
