@@ -5,8 +5,11 @@ subtitle:   "使用redis构建分布式,从零开始使用redis心得"
 date:       2017-08-18
 author:     "Duanrw"
 header-img: "img/post-bg-js-module.jpg"
+<<<<<<< HEAD
 catalog: true
 header-mask: 0.3
+=======
+>>>>>>> 4a157096cdf4439b257b4b7102bb2e922aa0c56d
 tags:
     - 爬虫
     - 分布式
@@ -19,9 +22,16 @@ tags:
 使用Scrapy分布式爬取知乎所有用户个人信息!
 
 大规模抓取静态网页Scrapy绝对是利器!当然也可以使用requests库来自己实现,但是要自己写过滤器等组件,既然有现成的轮子并且还是很好的轮子就没必要再造一个了!  
+<<<<<<< HEAD
 <div align=center>![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finwwbrovdj206b053weh.jpg)</div>  
 使用Scrapy时单一进程抓取的时候速度太慢,可以使用多进程,但是如果觉得还是慢,那么我们可以使用基于redis的分布式抓取,几台电脑或则服务器同时抓取来提升抓取效率!  
 
+=======
+<div align=center>
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finwwbrovdj206b053weh.jpg)
+</div>  
+使用Scrapy时单一进程抓取的时候速度太慢,可以使用多进程,但是如果觉得还是慢,那么我们可以使用基于redis的分布式抓取,几台电脑或则服务器同时抓取来提升抓取效率!
+>>>>>>> 4a157096cdf4439b257b4b7102bb2e922aa0c56d
 ## Catalog  
 
 1.  [Scrapy introduction](#introduction)  
@@ -42,11 +52,18 @@ tags:
 
 ## How does Scrapy worked
 
+<<<<<<< HEAD
 引用网上的一张图来说明整个工作原理:  
 <div align=center>
 ![scrapy](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finuwg7c1xj20jg0dqdi2.jpg)
 </div>  
 
+=======
+引用网上的一张图来说明整个工作原理:
+<div align=center>
+![scrapy](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finuwg7c1xj20jg0dqdi2.jpg)
+</div>  
+>>>>>>> 4a157096cdf4439b257b4b7102bb2e922aa0c56d
 可以看到整个Scrapy 有几个组件:
 
 Spider(蜘蛛),Scheduler(调度器),Downloader(下载器),Item Pipeline(管道),Engine(引擎),Downloader Middlewares(下载中间件),Spider Middlewares(蜘蛛中间件).我们引用网上的一个小故事来说明各个组件之间的关系:  
