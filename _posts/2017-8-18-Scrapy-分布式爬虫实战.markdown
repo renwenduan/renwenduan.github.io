@@ -19,7 +19,7 @@ tags:
 使用Scrapy分布式爬取知乎所有用户个人信息!
 
 大规模抓取静态网页Scrapy绝对是利器!当然也可以使用requests库来自己实现,但是要自己写过滤器等组件,既然有现成的轮子并且还是很好的轮子就没必要再造一个了!  
-<div align=center>![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finwwbrovdj206b053weh.jpg)</div>  
+![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finwwbrovdj206b053weh.jpg)
 使用Scrapy时单一进程抓取的时候速度太慢,可以使用多进程,但是如果觉得还是慢,那么我们可以使用基于redis的分布式抓取,几台电脑或则服务器同时抓取来提升抓取效率!  
 
 ## Catalog  
@@ -43,9 +43,9 @@ tags:
 ## How does Scrapy worked
 
 引用网上的一张图来说明整个工作原理:  
-<div align=center>
+
 ![scrapy](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finuwg7c1xj20jg0dqdi2.jpg)
-</div>  
+
 
 可以看到整个Scrapy 有几个组件:
 
@@ -101,9 +101,9 @@ Spider：（处理完毕数据之后对于需要跟进的URL），Hi！引擎，
 # Scrapy Usage  
 #### 思路分析:
 抛开框架我们来分析下我们爬取的原理: 我们从一个关注的人开始,获取这个关注的人的信息并储存下来,然后获取这个关注的人的的关注的人和粉丝,再去获取关注人的人的信息并存储循环往复下去就实现了从一个人开始层层抓取下去.来张图-借鉴传销图:  
-<div align=center>
+
 ![爬取原理](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finvsfmdwaj20dc08pjrg.jpg)
-</div>  
+
 当然如果一个人没有关注人没有粉丝那就算了,放过他们!我们可以利用[递归](https://zh.wikipedia.org/zh-hans/%E9%80%92%E5%BD%92)的思想来实现这个思路
 
 #### 环境配置:
@@ -122,9 +122,9 @@ $ sudo python get-pip.py install
 这里使用官方的教程:[官方教程](https://www.mongodb.com/download-center?jmp=tutorials&_ga=2.71069011.218377571.1503039811-1991435481.1501574113#community)   
 
 选择自己的系统查看教程进行选择教程安装  
-<div align=center>
+
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finw4xt416j20ll0b2t9z.jpg)
-</div>
+
 ---
 
 #### 创建项目
