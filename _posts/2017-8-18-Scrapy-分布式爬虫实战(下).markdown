@@ -847,7 +847,7 @@ REDIS_URL = 'redis://user:pass@hostname:9001' # 配置master数据库信息,如�
 * daemonize yes #---默认值no，该参数用于定制redis服务是否以守护模式运行,也就是后台运行
 * protected-mode yes # 是否开启保护模式。默认开启，如果没有设置bind项的ip和redis密码的话，服务将只允许本地访问。
 
-修改这几个就能使用啦!如果你想查看详细的配置,看这里
+修改这几个就能使用啦!如果你想查看详细的配置,看这里 http://www.jianshu.com/p/41f393f594e8
 
 到这里就完成了分布式爬取啦,在命令行中重新启动爬虫,就可以在redis中查看爬取到的数据了:   
 ![redis数据](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fiouue8qgyj20ic068wf2.jpg)
@@ -870,11 +870,54 @@ REDIS_URL = 'redis://user:pass@hostname:9001' # 配置master数据库信息,如�
  > 这样我们就将文件clone到服务器了,如果没有权限那就使用HTTPS来clone,-b为指定分支
 
   然后在服务器端终端输出:
-  
+
   > $ scrapy crawl zhihu
 
-  这样我们就在服务器端也开启了一个蜘蛛,你可以依次在你的服务器端部署,这样就完成了服务器端的部署啦!如果你不放心,可以去看下服务器端的数据是否更新了,这里我就不截图了.  当然如果想要减小你的服务器压力,可以关闭 scrapy_redis.pipelines.RedisPipeline 这个管道,将数据分别存在各自的机器上,这样就减轻了服务器的网络传输压力.  
+  这样我们就在服务器端也开启了一个蜘蛛,你可以依次在你的服务器端部署,这样就完成了服务器端的部署啦!想要更多的配置信息,请看上面的srapy-redis 的设置信息.如果你不放心,可以去看下服务器端的数据是否更新了,这里我就不截图了.  当然如果想要减小你的服务器压力,可以关闭 scrapy_redis.pipelines.RedisPipeline 这个管道,将数据分别存在各自的机器上,这样就减轻了服务器的网络传输压力.  
 
   还有另外一个问题.如果你有两三台需要部署还好,如果你有上百台服务器怎么办,下面就介绍一个官方提供的工具:scapyd!
 
-### 使用Scrapyd
+### 使用Scrapyd  
+
+上官方文档 http://scrapyd.readthedocs.io/en/latest/index.html
+
+* 首先在所有的主机上安装scrapyd 记得在安全组中开启端口6800:  
+  > $ pip install scrapyd  
+  还有记得求该scrapyd的配置文件,通常在/etc/scrapyd/scrapyd.conf 可以找到scrapyd的配置文件,将bind改为0.0.0.0 否则远程无法访问(这样可能会有安全问题),具体请看: http://www.cnblogs.com/Irving/p/6752575.html  
+
+* 然后在本机的项目目录下有个scrapy.cfg文件设置如下  
+
+  ```python
+  # Automatically created by: scrapy startproject
+  #
+  # For more information about the [deploy] section see:
+  # https://scrapyd.readthedocs.org/en/latest/deploy.html
+
+  [settings]
+  default = zhihu.settings
+
+  [deploy]
+  url = http://114.115.144.284:6800/addversion.json
+  project = zhihu
+  ```  
+  这里ip写你的服务器的ip,端口为默认端口,记得在最后加上addversion.json
+
+  然后安装scrapyd-client:
+  > $ pip install scrapyd-client  
+
+  在本地终端中输入:
+  scrapyd-deploy
+
+  就可以将项目远程部署到你的服务器了,如果你多次提交那就开启多个蜘蛛进行爬取.  
+  然后在浏览器中输入你服务器地址:6800 就可以查看这个机器上所有的项目运行情况(盗图):  
+  ![scrapyd](https://ws1.sinaimg.cn/large/b3c7bdb6ly1fiow8vow86j20ld07wt9n.jpg)  
+  这里你可以查看日志文件也可以.  
+
+  * 停止任务
+    > $ curl http://你的服务器ip地址:6800/cancel.json -d project=zhihi -d job=你的job代号
+
+
+  更多操作可以查看官方文档提供的api: https://scrapyd.readthedocs.io/en/stable/api.html  
+
+到这里整个项目就做完了,如果有什么错误和不妥请留言或者发邮件给我719756810@qq.com  
+本文参考了'静觅'崔庆才大神的博客非常感谢,侵删!他的更多博客请看:http://cuiqingcai.com/3314.html
