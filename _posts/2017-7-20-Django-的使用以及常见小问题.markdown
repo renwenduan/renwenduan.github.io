@@ -4,7 +4,7 @@ title:      "Django的使用以及常用问题的理解"
 subtitle:   "Django框架的创建,从最基础的内容开始一步一步搭建大致的环境!"
 date:       2017-7-20
 author:     "Duanrw"
-header-img: "img/post-bg-js-module.jpg"
+header-img: "img/home-bg-o.jpg"
 catalog: true
 header-mask: 0.3
 tags:
