@@ -17,7 +17,7 @@ tags:
 ## Foreword
 ---
 使用Scrapy分布式爬取知乎所有用户个人信息!
-项目地址 https://github.com/renwenduan/zhihu/tree/renwen
+项目地址 [爬取知乎所有用户](https://github.com/renwenduan/zhihu/tree/renwen)
 
 大规模抓取静态网页Scrapy绝对是利器!当然也可以使用requests库来自己实现,但是要自己写过滤器等组件,既然有现成的轮子并且还是很好的轮子就没必要再造一个了!  
 ![](https://ws1.sinaimg.cn/large/b3c7bdb6ly1finwwbrovdj206b053weh.jpg)  
