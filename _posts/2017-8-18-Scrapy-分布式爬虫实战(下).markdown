@@ -4,7 +4,7 @@ title:      "Scrapy爬取知乎所有用户实战(下)"
 subtitle:   "Scrapy-redis开启分布式爬取"
 date:       2017-08-18
 author:     "Duanrw"
-header-img: "img/post-bg-js-module.jpg"
+header-img: "img/post-bg-2015.jpg"
 catalog: true
 header-mask: 0.3
 tags:
