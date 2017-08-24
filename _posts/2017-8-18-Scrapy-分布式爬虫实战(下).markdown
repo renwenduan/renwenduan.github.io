@@ -857,7 +857,7 @@ REDIS_URL = 'redis://user:pass@hostname:9001' # 配置master数据库信息,如�
 到这里分布式的代码就写完了然后我们需要弄到服务器上
 
 
-## Use the Scrapyd to Deploy the project
+## Use the Tools to Deploy the project
 
 这里我们提供两种方案:  
 ### 使用git
