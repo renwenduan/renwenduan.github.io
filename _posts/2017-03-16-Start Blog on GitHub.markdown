@@ -2,7 +2,7 @@
 layout:     post
 title:      "Start a Blog on Github"
 subtitle:   "Record My Python Life "
-date:       2017-7-16
+date:       2017-3-16
 author:     "Duanrw"
 header-img: "img/post-bg-js-module.jpg"
 tags:
