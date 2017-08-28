@@ -15,7 +15,7 @@ tags:
 ---
 
 ## Foreword
----
+
 使用Scrapy分布式爬取知乎所有用户个人信息!
 项目地址 [爬取知乎所有用户](https://github.com/renwenduan/zhihu/tree/renwen)
 
@@ -36,7 +36,7 @@ tags:
 
 详细信息可以移步官方网站[Scrapy](https://scrapy.org/),文档在这里[中文官方文档](http://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/overview.html), [英文官方文档](https://docs.scrapy.org/en/latest/)  
 
----
+
 说了那么多,其实就想表达一件事:**使用Scrapy,网络爬虫不再困难!** 既然Scrapy有那么多好处,那么我们先来了解下它的原理吧
 
 ## How does Scrapy worked
