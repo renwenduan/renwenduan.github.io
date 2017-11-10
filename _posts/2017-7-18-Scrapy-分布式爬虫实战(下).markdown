@@ -33,11 +33,7 @@ tags:
 
 ---
 
-## Catalog
-1. Why should we use distributed system?
-2. Scrapy-redis analyze  
-3. How to use Scrapy-redis  
-4. Use the Scrapyd to Deploy the project  
+
 
 ## Why should we use distributed system
 从上面的故事也可以看到了,我们有两个需求:
