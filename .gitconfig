@@ -1,0 +1,11 @@
+[user]
+	name = Renwen DUAN
+	email = 719756810@qq.com
+[alias]
+	last = log -1 HEAD
+	unstage = reset HEAD
+    br = branch -v
+	brnm = branch -v --no-merged
+	gn = grep -n
+	grep = grep -n
+	gren = grep -n
