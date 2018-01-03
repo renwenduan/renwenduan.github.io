@@ -23,32 +23,32 @@ tags:
  >> v(2) % 只有一行，所以指定就是列
  ans =  2
  ```
-* 列向量 -- 使用分好分割  
+* 列向量 -- 使用分号分割  
 
- ```python  
- >> v = [1; 2; 3]
- v =
-   1
-   2
-   3
->> v(2) % 只有一列，所以指定就是行
-ans =  2
- ```  
+   ```python  
+   >> v = [1; 2; 3]
+   v =
+     1
+     2
+     3
+  >> v(2) % 只有一列，所以指定就是行
+  ans =  2
+   ```  
 * 矩阵  
  * 普通矩阵  
 
- ```Python  
- >>   A = [1, 2; 3, 4] % 一行写完
- A =
-    1   2
-    3   4
- >> A = [1, 2; % 分行写
- > 3, 4]
- A =
-    1   2
-    3   4
+   ```Python  
+   >>   A = [1, 2; 3, 4] % 一行写完
+   A =
+      1   2
+      3   4
+   >> A = [1, 2; % 分行写
+   > 3, 4]
+   A =
+      1   2
+      3   4
 
- ```
+   ```
  * 创建技巧  
     * a : c --- 从a到c  
     * a : b : c --- 从a，间隔b，到c  
@@ -158,20 +158,20 @@ ans =
 
  * 访问多行或者多列   
 
-  ```Python
-   >> A(:, [1, 3]) % 第一列和第三列，所有，元素
-  ans =
+    ```Python
+     >> A(:, [1, 3]) % 第一列和第三列，所有，元素
+    ans =
 
-     1   3
-     4   6
-     7   9
+       1   3
+       4   6
+       7   9
 
-  >> A([1, 3], :) % 第一行和第三行，所有，元素
-  ans =
+    >> A([1, 3], :) % 第一行和第三行，所有，元素
+    ans =
 
-     1   2   3
-     7   8   9
-  ```
+       1   2   3
+       7   8   9
+    ```
 * 合并矩阵  
   * C = [A B] %  把B按列加到A上,生成C  
   * C = [A ; B]  % 把B按照行加到A上,生成C  
@@ -456,85 +456,85 @@ ans =
     * MarkerFaceColor：标记颜色
     * MarkerSize：标记大小
 
-```python
-t = [0:0.1:0.98];
-y1 = sin(2*pi*4*t);
-plot(t,y1);
-y2 = cos(2*pi*4t);
+  ```python
+  t = [0:0.1:0.98];
+  y1 = sin(2*pi*4*t);
+  plot(t,y1);
+  y2 = cos(2*pi*4t);
 
-hold on ;  %  使用 hold on 可以将接下来绘制的函数放在一张图里
+  hold on ;  %  使用 hold on 可以将接下来绘制的函数放在一张图里
 
-plot(t, y2, 'r'); % 第三个参数，表示颜色
+  plot(t, y2, 'r'); % 第三个参数，表示颜色
 
-xlabel('time');
-ylabel('value');  %  标记出x和y轴
+  xlabel('time');
+  ylabel('value');  %  标记出x和y轴
 
-legend('sin','cos') %  在图像右上角，用来区分多个函数的图例，依次表示两个曲线所表示的内容
+  legend('sin','cos') %  在图像右上角，用来区分多个函数的图例，依次表示两个曲线所表示的内容
 
-tiitle('my plot') %  在图像的正上方给图像加上标题
+  tiitle('my plot') %  在图像的正上方给图像加上标题
 
-print -dpng 'myPlot.png'  % 输出图像,保存在'pwd'目录下
+  print -dpng 'myPlot.png'  % 输出图像,保存在'pwd'目录下
 
-close % 关闭图像
+  close % 关闭图像
 
-figure(1); plot(t,y1); % 新开第一个窗口绘制y1
-figure(2); plot(t,y1); % 新开第二个窗口绘制y2
+  figure(1); plot(t,y1); % 新开第一个窗口绘制y1
+  figure(2); plot(t,y1); % 新开第二个窗口绘制y2
 
-% pos为向量中为1的行序号组成的向量，neg为向量中为0的行序号组成的向量
-plot(X(pos,1),X(pos,2),'k+','LineWidth',2,'MarkerSize',7);
-plot(X(neg,1),X(neg,2),'ko','markerFaceColor','y','MarkerSize',7);
+  % pos为向量中为1的行序号组成的向量，neg为向量中为0的行序号组成的向量
+  plot(X(pos,1),X(pos,2),'k+','LineWidth',2,'MarkerSize',7);
+  plot(X(neg,1),X(neg,2),'ko','markerFaceColor','y','MarkerSize',7);
 
-```
+  ```
 
 其他属性  
-```Python
-Format arguments:
-   linestyle
-         '-'  Use solid lines (default).
-         '--' Use dashed lines.`
-         ':'  Use dotted lines.
-         '-.' Use dash-dotted lines.
-   markerstyle
-         '+'  crosshair
-         'o'  circle
-         '*'  star
-         '.'  point
-         'x'  cross
-         's'  square
-         'd'  diamond
-         '^'  upward-facing triangle
-         'v'  downward-facing triangle
-         '>'  right-facing triangle
-         '<'  left-facing triangle
-         'p'  pentagram
-         'h'  hexagram
-   color
-         'k'  blacK
-         'r'  Red
-         'g'  Green
-         'b'  Blue
-         'm'  Magenta
-         'c'  Cyan
-         'w'  White
+  ```Python
+  Format arguments:
+     linestyle
+           '-'  Use solid lines (default).
+           '--' Use dashed lines.`
+           ':'  Use dotted lines.
+           '-.' Use dash-dotted lines.
+     markerstyle
+           '+'  crosshair
+           'o'  circle
+           '*'  star
+           '.'  point
+           'x'  cross
+           's'  square
+           'd'  diamond
+           '^'  upward-facing triangle
+           'v'  downward-facing triangle
+           '>'  right-facing triangle
+           '<'  left-facing triangle
+           'p'  pentagram
+           'h'  hexagram
+     color
+           'k'  blacK
+           'r'  Red
+           'g'  Green
+           'b'  Blue
+           'm'  Magenta
+           'c'  Cyan
+           'w'  White
 
-常用的修改属性有：
-"linestyle",
-"linewidth",
-"color",
-"marker",
-"markersize",
-"markeredgecolor",
-"markerfacecolor".
+  常用的修改属性有：
+  "linestyle",
+  "linewidth",
+  "color",
+  "marker",
+  "markersize",
+  "markeredgecolor",
+  "markerfacecolor".
 
-```
+  ```
 
 * 直方图
 
-```Python
->> w = -6 + sqrt(10)*randn(1, 10000);
->> hist(w)
->> hist(w, 30) % 30组
-```
+  ```Python
+  >> w = -6 + sqrt(10)*randn(1, 10000);
+  >> hist(w)
+  >> hist(w, 30) % 30组
+  ```
 
 
 
