@@ -402,3 +402,178 @@ Name: C班级成绩表, dtype: object
 
 ```
 
+
+## DataFrame
+
+
+```python
+
+import pandas as pd 
+
+d = pd.DataFrame([[1,2,3],[9,8,7]],index=['x1','x2'],columns=['y1','y2','y3'])
+
+d
+Out[96]: 
+    y1  y2  y3
+x1   1   2   3
+x2   9   8   7
+
+```
+
+* DataFrame 对象是Pandas最常用的数据类型  
+    * 表格数据机构, 类似于Excel或者关系型数据库中的二维表的  
+    * 是Series 对象的容器, 可视为: 二维的带标签的数组,或者Series组成的字典  
+    * DataFrame 对象是由多个Series对象最为列组成的表格数据类型,每行Series值都增加了一个公共的索引  
+
+* DataFrame 对象既有行索引,又有列索引    
+    * 行索引, 表明不同行,横向索引,叫 index, 0轴, axis = 0   
+    * 列索引, 表明不同列, 纵向索引,叫 columns, 1轴, axis=1  
+
+### 其他情况:  
+
+* 基本操作类似于Series, 依据 行列索引进行操作  
+* 内存中以一个或者多个二维块存放,而不是列表,字典或者别的一维数据结构  
+* 常用语表达二维数据,但是也可以用于表达对位数据(层次化索引的表格型结构--没用过,不讨论)  
+
+
+### 创建  
+
+* Python list 列表创建DataFrame  
+
+
+```Python  
+
+# 二维列表,内层是行,列索引默认0,1,2....   
+a = pd.DataFrame([['小明','male',18,170,60,3000,90],['小华','female',28,160,50,8000,60]])
+
+a
+Out[98]: 
+    0       1   2    3   4     5   6
+0  小明    male  18  170  60  3000  90
+1  小华  female  28  160  50  8000  60
+
+
+# 自定义行列索引
+
+bv = [['小明','male',18,170,60,3000,90],['小华','female',28,160,50,8000,60]]
+
+b = pd.DataFrame(bv,index=[1,2],columns=['name','sex','age','heigh','weight','salary','looks'])
+
+b
+Out[101]: 
+  name     sex  age  heigh  weight  salary  looks
+1   小明    male   18    170      60    3000     90
+2   小华  female   28    160      50    8000     60
+
+```
+
+
+* 等长列表或numpy数组组成的字典创建DataFrame, 注意必须等长  
+
+
+```Python
+
+# 字典索引是列,内部列表是行,行索引默认是0,1,2,3....
+cv = {
+    'name':['小明','小华','小红','小白','小兰'],
+    'sex':[1,0,0,1,0],
+    'age':[18,28,38,48,8]
+}
+
+cv
+Out[103]: 
+{'age': [18, 28, 38, 48, 8],
+ 'name': ['小明', '小华', '小红', '小白', '小兰'],
+ 'sex': [1, 0, 0, 1, 0]}
+
+c = pd.DataFrame(cv)
+
+c
+Out[105]: 
+   age name  sex
+0   18   小明    1
+1   28   小华    0
+2   38   小红    0
+3   48   小白    1
+4    8   小兰    0
+
+d = pd.DataFrame(cv,columns=['name','sex','age']) # 指定列排序
+
+d
+Out[107]: 
+  name  sex  age
+0   小明    1   18
+1   小华    0   28
+2   小红    0   38
+3   小白    1   48
+4   小兰    0    8
+
+e = pd.DataFrame(cv,index=[1,2,3,4,5],columns=['name','sex','age','heigh']) # 传入列在数据中找不到，会产生NA值
+
+e
+Out[109]: 
+  name  sex  age heigh
+1   小明    1   18   NaN
+2   小华    0   28   NaN
+3   小红    0   38   NaN
+4   小白    1   48   NaN
+5   小兰    0    8   NaN
+
+
+```
+
+* 嵌套字典  
+
+> 字典组成的字典,创建DataFrame,不等长也可以  
+
+
+```Python
+
+# 生成的DataFrame，外层字典键是列索引，内层键是行索引
+
+fv = {
+    'name':{1:'小明',2:'小华',3:'小红',4:'小白',5:'小兰'},
+    'sex':{1:1,2:0,3:0,4:1,5:0},
+    'age':{2:28,3:38,4:48,5:8} # 少一个值自动填充为Nan
+}
+
+f = pd.DataFrame(fv)
+
+f
+Out[112]: 
+    age name  sex
+1   NaN   小明    1
+2  28.0   小华    0
+3  38.0   小红    0
+4  48.0   小白    1
+5   8.0   小兰    0
+
+# 内层字典键被合并、排序以形成最终索引，可以显式指定索引
+
+g = pd.DataFrame(fv,index=[2,3,4,6])
+
+g
+Out[114]: 
+    age name  sex
+2  28.0   小华  0.0
+3  38.0   小红  0.0
+4  48.0   小白  1.0
+6   NaN  NaN  NaN
+
+
+```
+
+* Series 组成的字典 创建DataFrame,同嵌套字典  
+
+* ndarray 数组创建DataFrame  
+
+```python 
+j = pd.DataFrame(np.arange(10).reshape(2,5)) #自动生成行/列索引
+
+
+k = pd.DataFrame(np.random.randn(6,4),index=[1,2,3,4,5,6],columns=['a','b','c','d']) #自定义行列索引
+
+```
+
+**注意** 由 **列表,元祖或者numpy数组组成的字典** 创建DataFrame,必须等长  
+
