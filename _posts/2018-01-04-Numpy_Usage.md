@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "numpy&pandas&matplotlib usage"
-subtitle:   "Common Usage"
+title:      "Numpy Usage"
+subtitle:   "Numpy Common Usage"
 date:       2018-01-04
 author:     "Duanrw"
 header-img: "img/post-bg-universe.jpg"
@@ -9,7 +9,6 @@ tags:
     - machine_learning
     - course
     - numpy
-    - pandas
     - matplotlib
 ---  
 
