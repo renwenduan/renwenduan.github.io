@@ -197,7 +197,7 @@ b3 = np.delete(a, [1,2], axis=1)
 
 > 大部分函数都有参数axis = None 默认不输入此参数对数据进行计算,设定轴可以对此轴上的数据进行计算,0为横轴,1为纵轴   
 
-###  常用的统计函数  
+####  常用的统计函数  
 
 * .sum(a,axis=None)：数组a求和运算，根据给定轴axis计算数组a相关元素之和，axis整数或元组，轴、维度可以指定
 * .mean(a,axis=None)：根据给定轴axis计算数组a相关元素的期望（算数平均数），axis整数或元组
@@ -215,13 +215,13 @@ average(a,axis=None,weights=None)：根据给定轴axis计算数组a相关元素
 
 # Numpy的数据文件存和读  
 
-### 储存为.npy或者压缩文件.npz 
+#### 储存为.npy或者压缩文件.npz 
 
 > np.save('文件名.npy', 变量) # **变量** 存为.npy文件  
 > np.savez("y.npz", ar0 = a, ar1 = b)  # 多个数组存入一个.npz压缩包  
 > c = np.load('x.npy') # 读取数据 无论是压缩包还是数组都用这一个接口
 
-### Numpy 存储为csv文件  
+#### Numpy 存储为csv文件  
 
 * 将ndarray 数组写到csv文件中:
 
@@ -247,7 +247,7 @@ b = np.array([['a','b','c','d'],['11','12','13','14']])
 np.savetxt('b.csv',b,fmt='%s',delimiter=',') #ASCII字符，不能存储非ASCII字符串  
 ```  
 
-### numpy 读取csv文件   
+##### numpy 读取csv文件   
 
 > np.loadtxt(frame,dtype=np.float,delimiter=None skiprows=0,usecols=None,unpack=False)  
 
