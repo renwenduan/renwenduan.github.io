@@ -687,7 +687,7 @@ a   小红  female  38   178     60  30000    95      东京
 
 整体情况查询,和DataFrame常用属性
 
-``Python
+```Python
 e
 Out[26]: 
   name  sex  age heigh
