@@ -47,7 +47,7 @@ dtype: int64
 * Python 字典的部分操作也可以用于Series对象  
 
 
-### 创建  
+#### 创建  
 
 * Python list 创建Series
 
@@ -120,7 +120,7 @@ dtype: float64
 
 ```  
 
-### 查询  
+#### 查询  
 
 ```python  
 
@@ -178,7 +178,7 @@ dtype: int64
 
 ```    
 
-### 切片  
+#### 切片  
 
 ```python  
 
@@ -208,7 +208,7 @@ ming     100
 dtype: int64
 ```
 
-### 其他操作  
+#### 其他操作  
 * 类似Python的字典操作  
     * 保留in操作  
     * 保留.get() 方法  
@@ -223,7 +223,7 @@ dtype: int64
     ```
 
 
-### 增加  --append链接其他Series
+#### 增加  --append链接其他Series
 
 ```Python  
 
@@ -253,7 +253,7 @@ dtype: object
 
 ```
 
-### 修改 --查询后赋值就可以修改了
+#### 修改 --查询后赋值就可以修改了
 
 
 ```python 
@@ -310,7 +310,7 @@ dtype: int64
 ```
 
 
-### 删除   
+#### 删除   
 > 删除的是视图,不会修改对象值  b3 = b.drop('ming')
 
 
@@ -362,7 +362,7 @@ dtype: bool
 
 
 
-### Series 类型的name属性  
+#### Series 类型的name属性  
 > Series对象和它的索引都有一个name属性,该数据和Pandas其他功能关系密切  
 
 
@@ -438,7 +438,7 @@ x2   9   8   7
     * 常用语表达二维数据,但是也可以用于表达对位数据(层次化索引的表格型结构--没用过,不讨论)  
 
 
-### 创建  
+#### 创建  
 
 * Python list 列表创建DataFrame  
 
