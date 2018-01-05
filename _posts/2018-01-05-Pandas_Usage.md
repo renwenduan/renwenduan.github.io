@@ -5,6 +5,8 @@ subtitle:   "Pandas Common Usage"
 date:       2018-01-05
 author:     "Duanrw"
 header-img: "img/post-bg-rwd.jpg"
+catalog: true
+header-mask: 0.3
 tags:
     - machine_learning
     - course
@@ -12,16 +14,16 @@ tags:
     - matplotlib
 ---  
 
-## Pandas 简介  
+# Pandas 简介  
 * pandas 是基于numpy搭建的,支持numpy中的大部分计算  
 * 专业用于数据分析的Python第三方库,最适用于处理大型的机构化表格数据  
 
-## Pandas的数据类型:  
+# Pandas的数据类型:  
 * Series 一维数据  
 * DataFrame 二维数据,Series的容器,这是最常用的数据  
 * Panel 三维数据,DataFrame的容器  
 
-## Series   
+## Series
 
 ```python  
 import pandas as pd
@@ -146,7 +148,7 @@ Out[46]: array(['hong', 'huang', 'qing'], dtype=object)
 
 ```
 
-### 索引查询  
+* 索引查询  
 
 ```Python
 
@@ -429,11 +431,11 @@ x2   9   8   7
     * 行索引, 表明不同行,横向索引,叫 index, 0轴, axis = 0   
     * 列索引, 表明不同列, 纵向索引,叫 columns, 1轴, axis=1  
 
-### 其他情况:  
+* 其他情况:  
 
-* 基本操作类似于Series, 依据 行列索引进行操作  
-* 内存中以一个或者多个二维块存放,而不是列表,字典或者别的一维数据结构  
-* 常用语表达二维数据,但是也可以用于表达对位数据(层次化索引的表格型结构--没用过,不讨论)  
+    * 基本操作类似于Series, 依据 行列索引进行操作  
+    * 内存中以一个或者多个二维块存放,而不是列表,字典或者别的一维数据结构  
+    * 常用语表达二维数据,但是也可以用于表达对位数据(层次化索引的表格型结构--没用过,不讨论)  
 
 
 ### 创建  
@@ -522,7 +524,7 @@ Out[109]:
 
 ```
 
-* 嵌套字典  
+* 嵌套字典创建  
 
 > 字典组成的字典,创建DataFrame,不等长也可以  
 
