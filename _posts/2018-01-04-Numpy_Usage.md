@@ -247,7 +247,7 @@ b = np.array([['a','b','c','d'],['11','12','13','14']])
 np.savetxt('b.csv',b,fmt='%s',delimiter=',') #ASCII字符，不能存储非ASCII字符串  
 ```  
 
-##### numpy 读取csv文件   
+#### numpy 读取csv文件   
 
 > np.loadtxt(frame,dtype=np.float,delimiter=None skiprows=0,usecols=None,unpack=False)  
 
