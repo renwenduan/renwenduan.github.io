@@ -14,13 +14,14 @@ tags:
     - matplotlib
 ---  
 
-##Forward  
+
+## Forward  
 
 半年前使用的东西很久不用已经忘记的差不多了,最近又在做一个和机器学习相关的项目需要用到各种数据处理的包,所以就把pandas,numpy,matplotlib这三个库重新学一遍,在吴恩达的视频教学里推荐使用octave, 有兴趣的也可以去学一下这个,开发起来也挺快捷.    
 
 重新写一遍用来加深印象也算是给自己的知识点一个总结.还是那句话,如果你对学的东西没有太多理解,那就边学边写博客吧,这是一个学习的非常有用的方法
 
-### 什么是numpy?  
+#### 什么是numpy?  
 
 * Numpy(Numerical Python)是一个开源的、高性能的Python数值计算库，也是Python科学计算和数据分析的基础库，用于在大型、多维数组（矩阵）上执行数值运算
 
@@ -39,7 +40,7 @@ tags:
 * 这里约定使用np来给numpy的包命名别名.
 
 
-## numpy 矩阵和数组的转换
+#### numpy 矩阵和数组的转换
 > np.array(matrix)  # 将矩阵转换成数组  
 > np.matrix(array)  # 将数组转换为矩阵  
 
@@ -64,12 +65,13 @@ array([[ 1.,  2.,  3.],
        [ 4.,  5.,  6.]])
 ```  
 
-## ndarray-数组的操作(增查改删)  
+# ndarray 
 
+> 增删改查
 
 ### 查询  
 
-#### 索引
+##### 索引查询
 
 
 * 索引: 获取数组中特定位置的元素
@@ -95,7 +97,7 @@ a[1,:] # 取第一行的所有列
 a[:,1] # 取所有行的第一列
 ```  
 
-#### 布尔型索引  
+##### 布尔型索引查询  
 
     ```Python
     names = np.array(['Bob','Joe','Will','Bob','Will','Joe','Joe'])
@@ -119,9 +121,9 @@ a[:,1] # 取所有行的第一列
 
     ```  
 
-#### 逻辑运算  
+##### 逻辑运算混合查询  
 
-组合条件,逻辑运算符: ：& 且，| 或，非（!= 或 ~） 
+* 组合条件,逻辑运算符: ：& 且，| 或，非（!= 或 ~） 
 
 ```python 
 mask = (names == 'Bob') | (names == 'Will')
@@ -132,7 +134,7 @@ data[names != 'Bob']
 data[~(names == 'Bob')]
 ```  
 
-#### 返回指定条件元素所在位置索引  
+*  返回指定条件元素所在位置索引  
 
 
 ```python
@@ -191,7 +193,7 @@ b2 = np.delete(a, -1, axis=1)
 b3 = np.delete(a, [1,2], axis=1)
 ```  
 
-## Numpy统计  
+# Numpy统计  
 
 > 大部分函数都有参数axis = None 默认不输入此参数对数据进行计算,设定轴可以对此轴上的数据进行计算,0为横轴,1为纵轴   
 
@@ -205,24 +207,25 @@ average(a,axis=None,weights=None)：根据给定轴axis计算数组a相关元素
 
 ### 其他统计函数  
     
-    * .min(a,axis=None) max(a,axis=None)：计算数组a中元素的最小值、最大值
-    * .argmin(a,axis=None) argmax(a,axis=None)：计算数组a中元素最小值、最大值的降1维后下标（寻找某元素，得到它的 一维扁平化 后的位置）
-    * .ptp(a,axis=None)：计算数组a中元素最大值与最小值的差
-    * .median(a,axis=None)：计算数组a中元素的中位数（中值）
+* .min(a,axis=None) max(a,axis=None)：计算数组a中元素的最小值、最大值
+* .argmin(a,axis=None) argmax(a,axis=None)：计算数组a中元素最小值、最大值的降1维后下标（寻找某元素，得到它的 一维扁平化 后的位置）
+* .ptp(a,axis=None)：计算数组a中元素最大值与最小值的差
+* .median(a,axis=None)：计算数组a中元素的中位数（中值）
 
-## Numpy 数据的存取
 
-### 存  
+# Numpy的数据文件存和读  
+
+### 储存为.npy或者压缩文件.npz 
 
 > np.save('文件名.npy', 变量) # **变量** 存为.npy文件  
-> np.savez("y.npz", ar0 = a, ar1 = b)  # 多个数组存入一个.npz压缩包
-c = np.load('x.npy') # 读取数据 无论是压缩包还是数组都用这一个接口
+> np.savez("y.npz", ar0 = a, ar1 = b)  # 多个数组存入一个.npz压缩包  
+> c = np.load('x.npy') # 读取数据 无论是压缩包还是数组都用这一个接口
 
-### Numpy 存储csv文件  
+### Numpy 存储为csv文件  
 
-将ndarray 数组写到csv文件中:
+* 将ndarray 数组写到csv文件中:
 
-> np.savetxt(frame,array,fmt='%.18e',delimiter=None)  
+    > np.savetxt(frame,array,fmt='%.18e',delimiter=None)  
 
 * frame 存储文件、字符串或产生器的名字，可以是.gz或.bz2的压缩文件，对大型数据有用，压缩后存储或读取，节省存储资源
 * array 存入文件的数组
@@ -244,7 +247,7 @@ b = np.array([['a','b','c','d'],['11','12','13','14']])
 np.savetxt('b.csv',b,fmt='%s',delimiter=',') #ASCII字符，不能存储非ASCII字符串  
 ```  
 
-## numpy 读取csv文件   
+### numpy 读取csv文件   
 
 > np.loadtxt(frame,dtype=np.float,delimiter=None skiprows=0,usecols=None,unpack=False)  
 

@@ -314,7 +314,7 @@ dtype: int64
 > 删除的是视图,不会修改对象值  b3 = b.drop('ming')
 
 
-### **检测缺失值**  
+#### **检测缺失值**  
 
 * NaN: 非数字, Not a Number, Pandas 中它表示缺失值或者NA值  
 * isnull 和 notnull 函数可以检测缺失数据 
