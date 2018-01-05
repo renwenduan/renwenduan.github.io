@@ -4,7 +4,7 @@ SEOTitle: Duanrw Blog
 header-img: img/home-bg.jpg
 email: 719756810@qq.com
 description: "python,学习历程,学习心得,经验记录,个人见解|js,mysql,mongodb,redis,python,爬虫,框架"
-keyword: "段任文,renwen,duanrenwen,duanrw,任文,python, js ,html, css, mongodb,redis,mysql,爬虫,框架,自学,Linux"
+keyword: "段任文,renwen,duanrenwen,duanrw,任文,python, js ,html, css, mongodb,redis,mysql,爬虫,框架,自学,机器学习,machine learning,Linux"
 url: "https://www.duanrw.cn"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
@@ -68,7 +68,7 @@ ga_domain: www.duanrw.cn
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "试着做个正经的程序员"
-sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/renwen-sidebar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
