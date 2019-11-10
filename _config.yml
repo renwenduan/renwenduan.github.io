@@ -5,7 +5,7 @@ header-img: img/home-bg.jpg
 email: 719756810@qq.com
 description: "python,学习历程,学习心得,经验记录,个人见解|js,mysql,mongodb,redis,python,爬虫,框架"
 keyword: "段任文,renwen,duanrenwen,duanrw,任文,python, js ,html, css, mongodb,redis,mysql,爬虫,框架,自学,机器学习,machine learning,Linux"
-url: "https://www.duanrw.cn"              # your host, for absolute URL
+url: ""              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 
